@@ -29,7 +29,7 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-use PrestaShop\PrestaShop\Core\Business\Module\WidgetInterface;
+use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 
 require_once _PS_MODULE_DIR_.'blockcmsinfo/classes/InfoBlock.php';
 
