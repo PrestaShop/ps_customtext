@@ -31,25 +31,25 @@ if (!defined('_PS_VERSION_')) {
 
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 
-require_once _PS_MODULE_DIR_.'blockcmsinfo/classes/InfoBlock.php';
+require_once _PS_MODULE_DIR_.'ps_customtext/classes/CustomText.php';
 
-class blockcmsinfo extends Module implements WidgetInterface
+class Ps_Customtext extends Module implements WidgetInterface
 {
     public $html = '';
 
     public function __construct()
     {
-        $this->name = 'blockcmsinfo';
+        $this->name = 'ps_customtext';
         $this->tab = 'front_office_features';
-        $this->version = '2.0.0';
+        $this->version = '1.0.0';
         $this->author = 'PrestaShop';
         $this->bootstrap = true;
         $this->need_instance = 0;
 
         parent::__construct();
 
-        $this->displayName = $this->l('Custom CMS information block');
-        $this->description = $this->l('Adds custom information block in your store.');
+        $this->displayName = $this->l('Custom text');
+        $this->description = $this->l('Adds custom text in your store.');
         $this->ps_versions_compliancy = array('min' => '1.7', 'max' => _PS_VERSION_);
     }
 
@@ -65,20 +65,20 @@ class blockcmsinfo extends Module implements WidgetInterface
     {
         $return = true;
         $return &= Db::getInstance()->execute('
-				CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'info` (
-				`id_info` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-				`id_shop` int(10) unsigned DEFAULT NULL,
-				PRIMARY KEY (`id_info`)
-			) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8 ;'
+                CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'info` (
+                `id_info` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+                `id_shop` int(10) unsigned DEFAULT NULL,
+                PRIMARY KEY (`id_info`)
+            ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8 ;'
         );
 
         $return &= Db::getInstance()->execute('
-				CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'info_lang` (
-				`id_info` INT UNSIGNED NOT NULL,
-				`id_lang` int(10) unsigned NOT NULL ,
-				`text` text NOT NULL,
-				PRIMARY KEY (`id_info`, `id_lang`)
-			) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8 ;'
+                CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'info_lang` (
+                `id_info` INT UNSIGNED NOT NULL,
+                `id_lang` int(10) unsigned NOT NULL ,
+                `text` text NOT NULL,
+                PRIMARY KEY (`id_info`, `id_lang`)
+            ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8 ;'
         );
 
         return $return;
@@ -101,11 +101,11 @@ class blockcmsinfo extends Module implements WidgetInterface
 
     public function getContent()
     {
-        if (Tools::isSubmit('saveblockcmsinfo')) {
+        if (Tools::isSubmit('ps_customtext')) {
             if (!Tools::getValue('text_'.(int)Configuration::get('PS_LANG_DEFAULT'), false)) {
                 return $this->html . $this->displayError($this->l('You must fill in all fields.')) . $this->renderForm();
             } else {
-                $this->processSaveCmsInfo();
+                $this->processSaveCustomText();
                 return $this->html . $this->renderForm();
             }
         } else {
@@ -114,9 +114,9 @@ class blockcmsinfo extends Module implements WidgetInterface
         }
     }
 
-    public function processSaveCmsInfo()
+    public function processSaveCustomText()
     {
-        $info = new InfoBlock(Tools::getValue('id_info', 1));
+        $info = new CustomText(Tools::getValue('id_info', 1));
         $languages = Language::getLanguages(false);
         $text = array();
         foreach ($languages as $lang) {
@@ -135,7 +135,7 @@ class blockcmsinfo extends Module implements WidgetInterface
         }
 
         if ($saved) {
-            $this->_clearCache('blockcmsinfo.tpl');
+            $this->_clearCache('ps_customtext.tpl');
         } else {
             $this->html .= '<div class="alert alert-danger conf error">'.$this->l('An error occurred while attempting to save.').'</div>';
         }
@@ -191,7 +191,7 @@ class blockcmsinfo extends Module implements WidgetInterface
 
         $helper = new HelperForm();
         $helper->module = $this;
-        $helper->name_controller = 'blockcmsinfo';
+        $helper->name_controller = 'ps_customtext';
         $helper->identifier = $this->identifier;
         $helper->token = Tools::getAdminTokenLite('AdminModules');
         foreach (Language::getLanguages(false) as $lang) {
@@ -208,7 +208,7 @@ class blockcmsinfo extends Module implements WidgetInterface
         $helper->allow_employee_form_lang = $default_lang;
         $helper->toolbar_scroll = true;
         $helper->title = $this->displayName;
-        $helper->submit_action = 'saveblockcmsinfo';
+        $helper->submit_action = 'saveps_customtext';
 
         $helper->fields_value = $this->getFormValues();
 
@@ -221,7 +221,7 @@ class blockcmsinfo extends Module implements WidgetInterface
         $id_info = 1;
 
         foreach (Language::getLanguages(false) as $lang) {
-            $info = new InfoBlock((int)$id_info);
+            $info = new CustomText((int)$id_info);
             $fields_value['text'][(int)$lang['id_lang']] = $info->text[(int)$lang['id_lang']];
         }
 
@@ -232,18 +232,18 @@ class blockcmsinfo extends Module implements WidgetInterface
 
     public function renderWidget($hookName = null, array $configuration = [])
     {
-        if (!$this->isCached('blockcmsinfo.tpl', $this->getCacheId())) {
+        if (!$this->isCached('ps_customtext.tpl', $this->getCacheId())) {
             $this->smarty->assign($this->getWidgetVariables($hookName, $configuration));
         }
 
-        return $this->display(__FILE__, 'blockcmsinfo.tpl', $this->getCacheId());
+        return $this->display(__FILE__, 'ps_customtext.tpl', $this->getCacheId());
     }
     public function getWidgetVariables($hookName = null, array $configuration = [])
     {
         $sql = 'SELECT r.`id_info`, r.`id_shop`, rl.`text`
-			FROM `'._DB_PREFIX_.'info` r
-			LEFT JOIN `'._DB_PREFIX_.'info_lang` rl ON (r.`id_info` = rl.`id_info`)
-			WHERE `id_lang` = '.(int)$this->context->language->id.' AND  `id_shop` = '.(int)$this->context->shop->id;
+            FROM `'._DB_PREFIX_.'info` r
+            LEFT JOIN `'._DB_PREFIX_.'info_lang` rl ON (r.`id_info` = rl.`id_info`)
+            WHERE `id_lang` = '.(int)$this->context->language->id.' AND  `id_shop` = '.(int)$this->context->shop->id;
 
         return [
             'cms_infos' => Db::getInstance()->getRow($sql),
@@ -264,7 +264,7 @@ class blockcmsinfo extends Module implements WidgetInterface
         $shops_ids = Shop::getShops(true, null, true);
 
         foreach ($tab_texts as $tab) {
-            $info = new InfoBlock();
+            $info = new CustomText();
             foreach (Language::getLanguages(false) as $lang) {
                 $info->text[$lang['id_lang']] = $tab['text'];
             }

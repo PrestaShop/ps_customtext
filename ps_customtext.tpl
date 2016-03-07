@@ -23,6 +23,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div id="block-cmsinfo">
+<div id="custom-text">
   {$cms_infos.text nofilter}
 </div>

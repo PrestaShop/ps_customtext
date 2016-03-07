@@ -24,12 +24,12 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class InfoBlock extends ObjectModel
+class CustomText extends ObjectModel
 {
 	public $id;
-	
+
 	public $id_shop;
-	
+
 	public $text;
 
 	/**
