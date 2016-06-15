@@ -101,7 +101,7 @@ class Ps_Customtext extends Module implements WidgetInterface
 
     public function getContent()
     {
-        if (Tools::isSubmit('ps_customtext')) {
+        if (Tools::isSubmit('saveps_customtext')) {
             if (!Tools::getValue('text_'.(int)Configuration::get('PS_LANG_DEFAULT'), false)) {
                 return $this->html . $this->displayError($this->getTranslator()->trans('You must fill in all fields.', array(), 'Admin.Notifications.Error')) . $this->renderForm();
             } else {
