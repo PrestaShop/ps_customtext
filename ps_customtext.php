@@ -48,8 +48,8 @@ class Ps_Customtext extends Module implements WidgetInterface
 
         parent::__construct();
 
-        $this->displayName = $this->l('Custom text');
-        $this->description = $this->l('Adds custom text in your store.');
+        $this->displayName = $this->getTranslator()->trans('Custom text', array(), 'Modules.CustomText');
+        $this->description = $this->getTranslator()->trans('Adds custom text in your store.', array(), 'Modules.CustomText');
         $this->ps_versions_compliancy = array('min' => '1.7', 'max' => _PS_VERSION_);
     }
 
@@ -103,7 +103,7 @@ class Ps_Customtext extends Module implements WidgetInterface
     {
         if (Tools::isSubmit('ps_customtext')) {
             if (!Tools::getValue('text_'.(int)Configuration::get('PS_LANG_DEFAULT'), false)) {
-                return $this->html . $this->displayError($this->l('You must fill in all fields.')) . $this->renderForm();
+                return $this->html . $this->displayError($this->getTranslator()->trans('You must fill in all fields.', array(), 'Admin.Notifications.Error')) . $this->renderForm();
             } else {
                 $this->processSaveCustomText();
                 return $this->html . $this->renderForm();
@@ -137,7 +137,7 @@ class Ps_Customtext extends Module implements WidgetInterface
         if ($saved) {
             $this->_clearCache('ps_customtext.tpl');
         } else {
-            $this->html .= '<div class="alert alert-danger conf error">'.$this->l('An error occurred while attempting to save.').'</div>';
+            $this->html .= '<div class="alert alert-danger conf error">'.$this->getTranslator()->trans('An error occurred while attempting to save.', array(), 'Admin.Notifications.Error').'</div>';
         }
 
         return $saved;
@@ -150,7 +150,7 @@ class Ps_Customtext extends Module implements WidgetInterface
         $fields_form = array(
             'tinymce' => true,
             'legend' => array(
-                'title' => $this->l('CMS block'),
+                'title' => $this->getTranslator()->trans('CMS block', array(), 'Modules.CustomText'),
             ),
             'input' => array(
                 'id_info' => array(
@@ -159,7 +159,7 @@ class Ps_Customtext extends Module implements WidgetInterface
                 ),
                 'content' => array(
                     'type' => 'textarea',
-                    'label' => $this->l('Text'),
+                    'label' => $this->getTranslator()->trans('Text', array(), 'Modules.CustomText'),
                     'lang' => true,
                     'name' => 'text',
                     'cols' => 40,
@@ -169,12 +169,12 @@ class Ps_Customtext extends Module implements WidgetInterface
                 ),
             ),
             'submit' => array(
-                'title' => $this->l('Save'),
+                'title' => $this->getTranslator()->trans('Save', array(), 'Admin.Actions'),
             ),
             'buttons' => array(
                 array(
                     'href' => AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules'),
-                    'title' => $this->l('Back to list'),
+                    'title' => $this->getTranslator()->trans('Back to list', array(), 'Admin.Actions'),
                     'icon' => 'process-icon-back'
                 )
             )
@@ -183,7 +183,7 @@ class Ps_Customtext extends Module implements WidgetInterface
         if (Shop::isFeatureActive() && Tools::getValue('id_info') == false) {
             $fields_form['input'][] = array(
                 'type' => 'shop',
-                'label' => $this->l('Shop association'),
+                'label' => $this->getTranslator()->trans('Shop association', array(), 'Admin.Global'),
                 'name' => 'checkBoxShopAsso_theme'
             );
         }
