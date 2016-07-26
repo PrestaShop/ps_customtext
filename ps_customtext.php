@@ -48,8 +48,8 @@ class Ps_Customtext extends Module implements WidgetInterface
 
         parent::__construct();
 
-        $this->displayName = $this->getTranslator()->trans('Custom text', array(), 'Modules.CustomText');
-        $this->description = $this->getTranslator()->trans('Adds custom text in your store.', array(), 'Modules.CustomText');
+        $this->displayName = $this->getTranslator()->trans('Custom text blocks', array(), 'Modules.CustomText');
+        $this->description = $this->getTranslator()->trans('Integrates custom text blocks anywhere in your store front', array(), 'Modules.CustomText');
         $this->ps_versions_compliancy = array('min' => '1.7', 'max' => _PS_VERSION_);
     }
 
@@ -103,7 +103,7 @@ class Ps_Customtext extends Module implements WidgetInterface
     {
         if (Tools::isSubmit('saveps_customtext')) {
             if (!Tools::getValue('text_'.(int)Configuration::get('PS_LANG_DEFAULT'), false)) {
-                return $this->html . $this->displayError($this->getTranslator()->trans('You must fill in all fields.', array(), 'Admin.Notifications.Error')) . $this->renderForm();
+                return $this->html . $this->displayError($this->getTranslator()->trans('Please fill out all fields.', array(), 'Admin.Notifications.Error')) . $this->renderForm();
             } else {
                 $this->processSaveCustomText();
                 return $this->html . $this->renderForm();
@@ -137,7 +137,7 @@ class Ps_Customtext extends Module implements WidgetInterface
         if ($saved) {
             $this->_clearCache('ps_customtext.tpl');
         } else {
-            $this->html .= '<div class="alert alert-danger conf error">'.$this->getTranslator()->trans('An error occurred while attempting to save.', array(), 'Admin.Notifications.Error').'</div>';
+            $this->html .= '<div class="alert alert-danger conf error">'.$this->getTranslator()->trans('An error occurred on saving.', array(), 'Admin.Notifications.Error').'</div>';
         }
 
         return $saved;
@@ -159,7 +159,7 @@ class Ps_Customtext extends Module implements WidgetInterface
                 ),
                 'content' => array(
                     'type' => 'textarea',
-                    'label' => $this->getTranslator()->trans('Text', array(), 'Modules.CustomText'),
+                    'label' => $this->getTranslator()->trans('Text block', array(), 'Modules.CustomText'),
                     'lang' => true,
                     'name' => 'text',
                     'cols' => 40,
@@ -255,7 +255,7 @@ class Ps_Customtext extends Module implements WidgetInterface
         $return = true;
         $tab_texts = array(
             array(
-                'text' => '<h3>Custom Block</h3>
+                'text' => '<h3>Custom Text Block</h3>
 <p><strong class="dark">Lorem ipsum dolor sit amet conse ctetu</strong></p>
 <p>Sit amet conse ctetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit.</p>'
             ),
