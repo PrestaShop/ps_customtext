@@ -232,11 +232,9 @@ class Ps_Customtext extends Module implements WidgetInterface
 
     public function renderWidget($hookName = null, array $configuration = [])
     {
-        if (!$this->isCached('ps_customtext.tpl', $this->getCacheId())) {
-            $this->smarty->assign($this->getWidgetVariables($hookName, $configuration));
-        }
+        $this->smarty->assign($this->getWidgetVariables($hookName, $configuration));
 
-        return $this->display(__FILE__, 'ps_customtext.tpl', $this->getCacheId());
+        return $this->fetch('module:'.$this->name.'/'.$this->name.'.tpl', $this->getCacheId());
     }
     public function getWidgetVariables($hookName = null, array $configuration = [])
     {
