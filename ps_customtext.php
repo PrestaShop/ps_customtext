@@ -135,9 +135,12 @@ class Ps_Customtext extends Module implements WidgetInterface
         }
 
         if ($saved) {
-            $this->_clearCache('ps_customtext.tpl');
+            Tools::clearCache();
         } else {
-            $this->html .= '<div class="alert alert-danger conf error">'.$this->getTranslator()->trans('An error occurred on saving.', array(), 'Admin.Notifications.Error').'</div>';
+            $this->html .=
+                '<div class="alert alert-danger conf error">'
+                    .$this->getTranslator()->trans('An error occurred on saving.', array(), 'Admin.Notifications.Error')
+                .'</div>';
         }
 
         return $saved;
