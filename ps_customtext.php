@@ -47,10 +47,10 @@ class Ps_Customtext extends Module implements WidgetInterface
         $this->bootstrap = true;
         parent::__construct();
 
-        $this->displayName = $this->trans('Custom text blocks', array(), 'Modules.CustomText');
-        $this->description = $this->trans('Integrates custom text blocks anywhere in your store front', array(), 'Modules.CustomText');
+        $this->displayName = $this->trans('Custom text blocks', array(), 'Modules.Customtext.Admin');
+        $this->description = $this->trans('Integrates custom text blocks anywhere in your store front', array(), 'Modules.Customtext.Admin');
 
-        $this->ps_versions_compliancy = array('min' => '1.7.0.0', 'max' => _PS_VERSION_);
+        $this->ps_versions_compliancy = array('min' => '1.7.1.0', 'max' => _PS_VERSION_);
 
         $this->templateFile = 'module:ps_customtext/ps_customtext.tpl';
     }
@@ -157,7 +157,7 @@ class Ps_Customtext extends Module implements WidgetInterface
         $fields_form = array(
             'tinymce' => true,
             'legend' => array(
-                'title' => $this->trans('CMS block', array(), 'Modules.CustomText'),
+                'title' => $this->trans('CMS block', array(), 'Modules.Customtext.Admin'),
             ),
             'input' => array(
                 'id_info' => array(
@@ -166,7 +166,7 @@ class Ps_Customtext extends Module implements WidgetInterface
                 ),
                 'content' => array(
                     'type' => 'textarea',
-                    'label' => $this->trans('Text block', array(), 'Modules.CustomText'),
+                    'label' => $this->trans('Text block', array(), 'Modules.Customtext.Admin'),
                     'lang' => true,
                     'name' => 'text',
                     'cols' => 40,
