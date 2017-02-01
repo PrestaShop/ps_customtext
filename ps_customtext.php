@@ -41,7 +41,7 @@ class Ps_Customtext extends Module implements WidgetInterface
     {
         $this->name = 'ps_customtext';
         $this->author = 'PrestaShop';
-        $this->version = '1.0.5';
+        $this->version = '2.0.0';
         $this->need_instance = 0;
 
         $this->bootstrap = true;
