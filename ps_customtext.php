@@ -41,11 +41,13 @@ class Ps_Customtext extends Module implements WidgetInterface
     {
         $this->name = 'ps_customtext';
         $this->author = 'PrestaShop';
-        $this->version = '2.0.0';
+        $this->version = '3.0.0';
         $this->need_instance = 0;
 
         $this->bootstrap = true;
         parent::__construct();
+
+        Shop::addTableAssociation('info', array('type' => 'shop'));
 
         $this->displayName = $this->trans('Custom text blocks', array(), 'Modules.Customtext.Admin');
         $this->description = $this->trans('Integrates custom text blocks anywhere in your store front', array(), 'Modules.Customtext.Admin');
@@ -57,10 +59,11 @@ class Ps_Customtext extends Module implements WidgetInterface
 
     public function install()
     {
-        return  parent::install() &&
-            $this->installDB() &&
-            $this->registerHook('displayHome') &&
-            $this->installFixtures();
+        return parent::install()
+            && $this->installDB()
+            && $this->registerHook('displayHome')
+            && $this->installFixtures()
+            && $this->registerHook('actionShopDataDuplication');
     }
 
     public function uninstall()
@@ -74,17 +77,25 @@ class Ps_Customtext extends Module implements WidgetInterface
         $return &= Db::getInstance()->execute('
                 CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'info` (
                 `id_info` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-                `id_shop` int(10) unsigned DEFAULT NULL,
                 PRIMARY KEY (`id_info`)
             ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8 ;'
         );
 
         $return &= Db::getInstance()->execute('
+                CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'info_shop` (
+                `id_info` INT(10) UNSIGNED NOT NULL,
+                `id_shop` INT(10) UNSIGNED NOT NULL,
+                PRIMARY KEY (`id_info`, `id_shop`)
+            ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8 ;'
+        );
+
+        $return &= Db::getInstance()->execute('
                 CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'info_lang` (
                 `id_info` INT UNSIGNED NOT NULL,
-                `id_lang` int(10) unsigned NOT NULL ,
+                `id_shop` INT(10) UNSIGNED NOT NULL,
+                `id_lang` INT(10) UNSIGNED NOT NULL ,
                 `text` text NOT NULL,
-                PRIMARY KEY (`id_info`, `id_lang`)
+                PRIMARY KEY (`id_info`, `id_lang`, `id_shop`)
             ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8 ;'
         );
 
@@ -95,7 +106,9 @@ class Ps_Customtext extends Module implements WidgetInterface
     {
         $ret = true;
         if ($drop_table) {
-            $ret &=  Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'info`') && Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'info_lang`');
+            $ret &= Db::getInstance()->execute('DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'info`')
+                && Db::getInstance()->execute('DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'info_shop`')
+                && Db::getInstance()->execute('DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'info_lang`');
         }
 
         return $ret;
@@ -126,25 +139,20 @@ class Ps_Customtext extends Module implements WidgetInterface
 
     public function processSaveCustomText()
     {
-        $info = new CustomText(Tools::getValue('id_info', 1));
-
+        $shops = Tools::getValue('checkBoxShopAsso_configuration', array($this->context->shop->id));
         $text = array();
         $languages = Language::getLanguages(false);
+
         foreach ($languages as $lang) {
             $text[$lang['id_lang']] = Tools::getValue('text_'.$lang['id_lang']);
         }
 
-        $info->text = $text;
-
-        if (Shop::isFeatureActive() && !$info->id_shop) {
-            $saved = true;
-            $shop_ids = Shop::getShops();
-            foreach ($shop_ids as $id_shop) {
-                $info->id_shop = $id_shop;
-                $saved &= $info->add();
-            }
-        } else {
-            $saved = $info->save();
+        $saved = true;
+        foreach ($shops as $shop) {
+            Shop::setContext(Shop::CONTEXT_SHOP, $shop);
+            $info = new CustomText(Tools::getValue('id_info', 1));
+            $info->text = $text;
+            $saved &= $info->save();
         }
 
         return $saved;
@@ -225,14 +233,14 @@ class Ps_Customtext extends Module implements WidgetInterface
     public function getFormValues()
     {
         $fields_value = array();
-        $id_info = 1;
+        $idShop = $this->context->shop->id;
+        $idInfo = CustomText::getCustomTextIdByShop($idShop);
 
-        foreach (Language::getLanguages(false) as $lang) {
-            $info = new CustomText((int)$id_info);
-            $fields_value['text'][(int)$lang['id_lang']] = $info->text[(int)$lang['id_lang']];
-        }
+        Shop::setContext(Shop::CONTEXT_SHOP, $idShop);
+        $info = new CustomText((int)$idInfo);
 
-        $fields_value['id_info'] = $id_info;
+        $fields_value['text'] = $info->text;
+        $fields_value['id_info'] = $idInfo;
 
         return $fields_value;
     }
@@ -247,9 +255,7 @@ class Ps_Customtext extends Module implements WidgetInterface
     }
     public function getWidgetVariables($hookName = null, array $configuration = [])
     {
-        $sql = 'SELECT r.`id_info`, r.`id_shop`, rl.`text`
-            FROM `'._DB_PREFIX_.'info` r
-            LEFT JOIN `'._DB_PREFIX_.'info_lang` rl ON (r.`id_info` = rl.`id_info`)
+        $sql = 'SELECT * FROM `'._DB_PREFIX_.'info_lang` 
             WHERE `id_lang` = '.(int)$this->context->language->id.' AND  `id_shop` = '.(int)$this->context->shop->id;
 
         return array(
@@ -260,7 +266,7 @@ class Ps_Customtext extends Module implements WidgetInterface
     public function installFixtures()
     {
         $return = true;
-        $tab_texts = array(
+        $tabTexts = array(
             array(
                 'text' => '<h3>Custom Text Block</h3>
 <p><strong class="dark">Lorem ipsum dolor sit amet conse ctetu</strong></p>
@@ -268,19 +274,46 @@ class Ps_Customtext extends Module implements WidgetInterface
             ),
         );
 
-        $shops_ids = Shop::getShops(true, null, true);
+        $shopsIds = Shop::getShops(true, null, true);
+        $languages = Language::getLanguages(false);
+        $text = array();
 
-        foreach ($tab_texts as $tab) {
+        foreach ($tabTexts as $tab) {
             $info = new CustomText();
-            foreach (Language::getLanguages(false) as $lang) {
-                $info->text[$lang['id_lang']] = $tab['text'];
+            foreach ($languages as $lang) {
+                $text[$lang['id_lang']] = $tab['text'];
             }
-            foreach ($shops_ids as $id_shop) {
-                $info->id_shop = $id_shop;
-                $return &= $info->add();
+            $info->text = $text;
+            $return &= $info->add();
+        }
+
+        if($return && sizeof($shopsIds) > 1) {
+            foreach ($shopsIds as $idShop) {
+                Shop::setContext(Shop::CONTEXT_SHOP,$idShop);
+                $info->text = $text;
+                $return &= $info->save();
             }
         }
 
         return $return;
+    }
+
+    /**
+     * Add CustomText when adding a new Shop
+     *
+     * @param array $params
+     */
+    public function hookActionShopDataDuplication($params)
+    {
+        if ($infoId = CustomText::getCustomTextIdByShop($params['old_id_shop'])) {
+            Shop::setContext(Shop::CONTEXT_SHOP, $params['old_id_shop']);
+            $oldInfo = new CustomText($infoId);
+
+            Shop::setContext(Shop::CONTEXT_SHOP, $params['new_id_shop']);
+            $newInfo = new CustomText($infoId, null, $params['new_id_shop']);
+            $newInfo->text = $oldInfo->text;
+
+            $newInfo->save();
+        }
     }
 }
