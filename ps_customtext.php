@@ -268,7 +268,7 @@ class Ps_Customtext extends Module implements WidgetInterface
         $return = true;
         $tabTexts = array(
             array(
-                'text' => '<h3>Custom Text Block</h3>
+                'text' => '<h2>Custom Text Block</h2>
 <p><strong class="dark">Lorem ipsum dolor sit amet conse ctetu</strong></p>
 <p>Sit amet conse ctetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit.</p>'
             ),
