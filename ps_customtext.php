@@ -256,7 +256,7 @@ class Ps_Customtext extends Module implements WidgetInterface
     public function getWidgetVariables($hookName = null, array $configuration = [])
     {
         $sql = 'SELECT * FROM `'._DB_PREFIX_.'info_lang` 
-            WHERE `id_lang` = '.(int)$this->context->language->id.' AND  `id_shop` = '.(int)$this->context->shop->id;
+            WHERE `id_lang` = '.(int)$this->context->language->id;
 
         return array(
             'cms_infos' => Db::getInstance()->getRow($sql),
