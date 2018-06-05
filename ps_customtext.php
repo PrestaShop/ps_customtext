@@ -41,7 +41,7 @@ class Ps_Customtext extends Module implements WidgetInterface
     {
         $this->name = 'ps_customtext';
         $this->author = 'PrestaShop';
-        $this->version = '3.0.0';
+        $this->version = '4.0.0';
         $this->need_instance = 0;
 
         $this->bootstrap = true;
@@ -52,7 +52,7 @@ class Ps_Customtext extends Module implements WidgetInterface
         $this->displayName = $this->trans('Custom text blocks', array(), 'Modules.Customtext.Admin');
         $this->description = $this->trans('Integrates custom text blocks anywhere in your store front', array(), 'Modules.Customtext.Admin');
 
-        $this->ps_versions_compliancy = array('min' => '1.7.1.0', 'max' => _PS_VERSION_);
+        $this->ps_versions_compliancy = array('min' => '1.7.4.0', 'max' => _PS_VERSION_);
 
         $this->templateFile = 'module:ps_customtext/ps_customtext.tpl';
     }
