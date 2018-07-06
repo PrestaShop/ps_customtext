@@ -59,6 +59,12 @@ class Ps_Customtext extends Module implements WidgetInterface
 
     public function install()
     {
+        // Remove 1.6 equivalent module to avoid DB issues
+        $module16 = 'blockcmsinfo';
+        if (Module::isInstalled($module16)) {
+            Module::getInstanceByName($module16)->uninstall();
+        }
+
         return parent::install()
             && $this->installDB()
             && $this->registerHook('displayHome')
