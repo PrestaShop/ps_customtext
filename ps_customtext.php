@@ -59,13 +59,8 @@ class Ps_Customtext extends Module implements WidgetInterface
 
     public function install()
     {
-        // Remove 1.6 equivalent module to avoid DB issues
-        $module16 = 'blockcmsinfo';
-        if (Module::isInstalled($module16)) {
-            Module::getInstanceByName($module16)->uninstall();
-        }
-
-        return parent::install()
+        return $this->cleanPreviousModule()
+            && parent::install()
             && $this->installDB()
             && $this->registerHook('displayHome')
             && $this->installFixtures()
@@ -75,6 +70,21 @@ class Ps_Customtext extends Module implements WidgetInterface
     public function uninstall()
     {
         return parent::uninstall() && $this->uninstallDB();
+    }
+
+    public function cleanPreviousModule()
+    {
+      // Remove 1.6 equivalent module to avoid DB issues
+      $module16 = 'blockcmsinfo';
+      if (!Module::isInstalled($module16)) {
+        return true;
+      }
+
+      $oldModule = Module::getInstanceByName($module16);
+      if ($oldModule) {
+          return $oldModule->uninstall();
+      }
+      return $this->uninstallDB(true);
     }
 
     public function installDB()
@@ -261,7 +271,7 @@ class Ps_Customtext extends Module implements WidgetInterface
     }
     public function getWidgetVariables($hookName = null, array $configuration = [])
     {
-        $sql = 'SELECT * FROM `'._DB_PREFIX_.'info_lang` 
+        $sql = 'SELECT * FROM `'._DB_PREFIX_.'info_lang`
             WHERE `id_lang` = '.(int)$this->context->language->id.' AND  `id_shop` = '.(int)$this->context->shop->id;
 
         return array(
