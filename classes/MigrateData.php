@@ -58,10 +58,9 @@ class MigrateData
     /**
      * Import the old CustomText data in the new structure
      *
-     * @param $text
      * @return bool
      */
-    function insertData()
+    public function insertData()
     {
         if (empty($this->loadedData)) {
             return true;

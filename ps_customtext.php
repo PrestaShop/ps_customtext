@@ -35,6 +35,7 @@ require_once _PS_MODULE_DIR_.'ps_customtext/classes/CustomText.php';
 
 class Ps_Customtext extends Module implements WidgetInterface
 {
+    // Equivalent module on PrestaShop 1.6, sharing the same data
     const MODULE_16 = 'blockcmsinfo';
 
     private $templateFile;
@@ -80,7 +81,7 @@ class Ps_Customtext extends Module implements WidgetInterface
 
     public function installFrom16Version()
     {
-        include_once(_PS_MODULE_DIR_.$this->name.'/classes/MigrateData.php');
+        require_once _PS_MODULE_DIR_.$this->name.'/classes/MigrateData.php';
         $migration = new MigrateData();
         $migration->retrieveOldData();
 

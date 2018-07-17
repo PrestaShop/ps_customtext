@@ -36,7 +36,7 @@ if (!defined('_PS_VERSION_')) {
  */
 function upgrade_module_3_0_0($module)
 {
-    include_once(_PS_MODULE_DIR_.$module->name.'/classes/MigrateData.php');
+    require_once _PS_MODULE_DIR_.$module->name.'/classes/MigrateData.php';
     $migration = new MigrateData();
 
     $return = true;
