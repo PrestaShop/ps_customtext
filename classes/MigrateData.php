@@ -37,7 +37,7 @@ class MigrateData
      * - ps_customtext < v3.0.0
      * - blockcmsinfo (1.6 equivalent module)
      *
-     * @return type
+     * @return array
      */
     public function retrieveOldData()
     {
@@ -56,7 +56,7 @@ class MigrateData
     }
 
     /**
-     * Inserting the old CustomText data
+     * Import the old CustomText data in the new structure
      *
      * @param $text
      * @return bool

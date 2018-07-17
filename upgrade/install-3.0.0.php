@@ -42,30 +42,12 @@ function upgrade_module_3_0_0($module)
     $return = true;
 
     $migration->retrieveOldData();
-
-    /** Delete the column id_shop from info table */
-    $return &= Db::getInstance()->execute('ALTER TABLE `' . _DB_PREFIX_ . 'info` DROP `id_shop`');
-
-    /** Add the column id_shop and define as primary key in the table info_lang */
-    $return &= Db::getInstance()->execute('ALTER TABLE `' . _DB_PREFIX_ . 'info_lang` ADD `id_shop` INT(10) UNSIGNED NOT NULL');
-    $return &= Db::getInstance()->execute('ALTER TABLE `' . _DB_PREFIX_ . 'info_lang` DROP PRIMARY KEY, ADD PRIMARY KEY(`id_info`, `id_lang`, `id_shop`)');
-
-    /** Create the info_shop table */
-    $return &= Db::getInstance()->execute('
-                CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'info_shop` (
-                `id_info` INT(10) UNSIGNED NOT NULL,
-                `id_shop` INT(10) UNSIGNED NOT NULL,
-                PRIMARY KEY (`id_info`, `id_shop`)
-                ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8 ;'
-    );
+    $return &= $module->uninstallDB();
 
     /** Register the hook responsible for adding custom text when adding a new store */
     $return &= $module->registerHook('actionShopDataDuplication');
 
-    /** Truncate all DB table */
-    $return &= Db::getInstance()->execute('TRUNCATE `' . _DB_PREFIX_ . 'info`');
-    $return &= Db::getInstance()->execute('TRUNCATE `' . _DB_PREFIX_ . 'info_shop`');
-    $return &= Db::getInstance()->execute('TRUNCATE `' . _DB_PREFIX_ . 'info_lang`');
+    $return &= $module->installDB();
 
     /** Reset DB data */
     $return &= $migration->insertData();
