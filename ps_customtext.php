@@ -35,6 +35,8 @@ require_once _PS_MODULE_DIR_.'ps_customtext/classes/CustomText.php';
 
 class Ps_Customtext extends Module implements WidgetInterface
 {
+    const MODULE_16 = 'blockcmsinfo';
+
     private $templateFile;
 
     public function __construct()
@@ -59,32 +61,41 @@ class Ps_Customtext extends Module implements WidgetInterface
 
     public function install()
     {
-        return $this->cleanPreviousModule()
-            && parent::install()
+         // Remove 1.6 equivalent module to avoid DB issues
+        if (Module::isInstalled(self::MODULE_16)) {
+            return $this->installFrom16Version();
+        }
+
+        return $this->runInstallSteps();
+    }
+
+    public function runInstallSteps()
+    {
+        return parent::install()
             && $this->installDB()
             && $this->registerHook('displayHome')
             && $this->installFixtures()
             && $this->registerHook('actionShopDataDuplication');
     }
 
+    public function installFrom16Version()
+    {
+        include_once(_PS_MODULE_DIR_.$this->name.'/classes/MigrateData.php');
+        $migration = new MigrateData();
+        $migration->retrieveOldData();
+
+        $oldModule = Module::getInstanceByName(self::MODULE_16);
+        if ($oldModule) {
+            $oldModule->uninstall();
+        }
+        return $this->uninstallDB()
+            && $this->runInstallSteps()
+            && $migration->insertData();
+    }
+
     public function uninstall()
     {
         return parent::uninstall() && $this->uninstallDB();
-    }
-
-    public function cleanPreviousModule()
-    {
-      // Remove 1.6 equivalent module to avoid DB issues
-      $module16 = 'blockcmsinfo';
-      if (!Module::isInstalled($module16)) {
-        return true;
-      }
-
-      $oldModule = Module::getInstanceByName($module16);
-      if ($oldModule) {
-          return $oldModule->uninstall();
-      }
-      return $this->uninstallDB(true);
     }
 
     public function installDB()
