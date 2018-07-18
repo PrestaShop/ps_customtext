@@ -67,7 +67,8 @@ class Ps_Customtext extends Module implements WidgetInterface
             return $this->installFrom16Version();
         }
 
-        return $this->runInstallSteps();
+        return $this->runInstallSteps()
+            && $this->installFixtures();
     }
 
     public function runInstallSteps()
@@ -75,7 +76,6 @@ class Ps_Customtext extends Module implements WidgetInterface
         return parent::install()
             && $this->installDB()
             && $this->registerHook('displayHome')
-            && $this->installFixtures()
             && $this->registerHook('actionShopDataDuplication');
     }
 
