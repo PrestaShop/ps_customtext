@@ -53,7 +53,7 @@ class CustomText extends ObjectModel
 	 * @param int $shopId
 	 * @return bool|int
 	 */
-	static function getCustomTextIdByShop($shopId) 
+	public static function getCustomTextIdByShop($shopId)
 	{
 		$sql = 'SELECT i.`id_info` FROM `' . _DB_PREFIX_ . 'info` i
 		LEFT JOIN `' . _DB_PREFIX_ . 'info_shop` ish ON ish.`id_info` = i.`id_info`

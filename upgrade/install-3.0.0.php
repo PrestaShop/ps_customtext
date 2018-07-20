@@ -36,87 +36,21 @@ if (!defined('_PS_VERSION_')) {
  */
 function upgrade_module_3_0_0($module)
 {
+    require_once _PS_MODULE_DIR_.$module->name.'/classes/MigrateData.php';
+    $migration = new MigrateData();
+
     $return = true;
 
-    $data = getOldData();
-
-    /** Delete the column id_shop from info table */
-    $return &= Db::getInstance()->execute('ALTER TABLE `' . _DB_PREFIX_ . 'info` DROP `id_shop`');
-
-    /** Add the column id_shop and define as primary key in the table info_lang */
-    $return &= Db::getInstance()->execute('ALTER TABLE `' . _DB_PREFIX_ . 'info_lang` ADD `id_shop` INT(10) UNSIGNED NOT NULL');
-    $return &= Db::getInstance()->execute('ALTER TABLE `' . _DB_PREFIX_ . 'info_lang` DROP PRIMARY KEY, ADD PRIMARY KEY(`id_info`, `id_lang`, `id_shop`)');
-
-    /** Create the info_shop table */
-    $return &= Db::getInstance()->execute('
-                CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'info_shop` (
-                `id_info` INT(10) UNSIGNED NOT NULL,
-                `id_shop` INT(10) UNSIGNED NOT NULL,
-                PRIMARY KEY (`id_info`, `id_shop`)
-                ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8 ;'
-    );
+    $migration->retrieveOldData();
+    $return &= $module->uninstallDB();
 
     /** Register the hook responsible for adding custom text when adding a new store */
     $return &= $module->registerHook('actionShopDataDuplication');
 
-    /** Truncate all DB table */
-    $return &= Db::getInstance()->execute('TRUNCATE `' . _DB_PREFIX_ . 'info`');
-    $return &= Db::getInstance()->execute('TRUNCATE `' . _DB_PREFIX_ . 'info_shop`');
-    $return &= Db::getInstance()->execute('TRUNCATE `' . _DB_PREFIX_ . 'info_lang`');
+    $return &= $module->installDB();
 
     /** Reset DB data */
-    $return &= insertData($data);
-
-    return $return;
-}
-
-/**
- * Retrieves the old data of CustomText
- *
- * @return array
- */
-function getOldData()
-{
-    $data = array();
-    $texts = Db::getInstance()->executeS('SELECT i.`id_shop`, il.`id_lang`, il.`text` FROM `' . _DB_PREFIX_ . 'info` i
-    INNER JOIN `' . _DB_PREFIX_ . 'info_lang` il ON il.`id_info` = i.`id_info`'
-    );
-
-    if (is_array($texts) && !empty($texts)) {
-        foreach ($texts as $text) {
-            $data[(int)$text['id_shop']][(int)$text['id_lang']] = $text['text'];
-        }
-    }
-
-    return $data;
-}
-
-/**
- * Inserting the old CustomText data
- *
- * @param $text
- * @return bool
- */
-function insertData($texts)
-{
-    $return = true;
-
-    if (is_array($texts) && !empty($texts)) {
-        $shopsIds = Shop::getShops(true, null, true);
-        $customTexts = array_intersect_key($texts, $shopsIds);
-
-        $info = new CustomText();
-        $info->text = reset($customTexts);
-        $return &= $info->add();
-
-        if (sizeof($customTexts) > 1) {
-            foreach ($customTexts as $key => $text) {
-                Shop::setContext(Shop::CONTEXT_SHOP, (int) $key);
-                $info->text = $text;
-                $return &= $info->save();
-            }
-        }
-    }
+    $return &= $migration->insertData();
 
     return $return;
 }

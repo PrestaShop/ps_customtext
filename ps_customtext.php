@@ -35,6 +35,9 @@ require_once _PS_MODULE_DIR_.'ps_customtext/classes/CustomText.php';
 
 class Ps_Customtext extends Module implements WidgetInterface
 {
+    // Equivalent module on PrestaShop 1.6, sharing the same data
+    const MODULE_16 = 'blockcmsinfo';
+
     private $templateFile;
 
     public function __construct()
@@ -59,11 +62,36 @@ class Ps_Customtext extends Module implements WidgetInterface
 
     public function install()
     {
+         // Remove 1.6 equivalent module to avoid DB issues
+        if (Module::isInstalled(self::MODULE_16)) {
+            return $this->installFrom16Version();
+        }
+
+        return $this->runInstallSteps()
+            && $this->installFixtures();
+    }
+
+    public function runInstallSteps()
+    {
         return parent::install()
             && $this->installDB()
             && $this->registerHook('displayHome')
-            && $this->installFixtures()
             && $this->registerHook('actionShopDataDuplication');
+    }
+
+    public function installFrom16Version()
+    {
+        require_once _PS_MODULE_DIR_.$this->name.'/classes/MigrateData.php';
+        $migration = new MigrateData();
+        $migration->retrieveOldData();
+
+        $oldModule = Module::getInstanceByName(self::MODULE_16);
+        if ($oldModule) {
+            $oldModule->uninstall();
+        }
+        return $this->uninstallDB()
+            && $this->runInstallSteps()
+            && $migration->insertData();
     }
 
     public function uninstall()
@@ -255,7 +283,7 @@ class Ps_Customtext extends Module implements WidgetInterface
     }
     public function getWidgetVariables($hookName = null, array $configuration = [])
     {
-        $sql = 'SELECT * FROM `'._DB_PREFIX_.'info_lang` 
+        $sql = 'SELECT * FROM `'._DB_PREFIX_.'info_lang`
             WHERE `id_lang` = '.(int)$this->context->language->id.' AND  `id_shop` = '.(int)$this->context->shop->id;
 
         return array(
