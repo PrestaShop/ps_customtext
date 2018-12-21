@@ -65,7 +65,7 @@ class MigrateData
         if (empty($this->loadedData)) {
             return true;
         }
-        
+
         $return = true;
         $shopsIds = Shop::getShops(true, null, true);
         $customTexts = array_intersect_key($this->loadedData, $shopsIds);

@@ -59,7 +59,7 @@ class CustomText extends ObjectModel
         $sql = 'SELECT i.`id_info` FROM `' . _DB_PREFIX_ . 'info` i
 		LEFT JOIN `' . _DB_PREFIX_ . 'info_shop` ish ON ish.`id_info` = i.`id_info`
 		WHERE ish.`id_shop` = ' . (int) $shopId;
-        
+
         if ($result = Db::getInstance()->executeS($sql)) {
             return (int) reset($result)['id_info'];
         }
