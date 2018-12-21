@@ -44,7 +44,7 @@ class CustomText extends ObjectModel
             'id_info' => ['type' => self::TYPE_NOTHING, 'validate' => 'isUnsignedId'],
             // Lang fields
             'text' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml', 'required' => true],
-        ]
+        ],
     ];
 
     /**
