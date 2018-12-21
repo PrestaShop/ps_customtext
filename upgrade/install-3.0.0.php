@@ -29,7 +29,7 @@ if (!defined('_PS_VERSION_')) {
 }
 
 /**
- * Upgrade the Ps_Customtext module to V3.0.0
+ * Upgrade the Ps_Customtext module to V3.0.0.
  *
  * @param Ps_Customtext $module
  *

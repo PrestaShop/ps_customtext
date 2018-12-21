@@ -35,7 +35,7 @@ class MigrateData
     /**
      * This methods retrieves data from older database models
      * - ps_customtext < v3.0.0
-     * - blockcmsinfo (1.6 equivalent module)
+     * - blockcmsinfo (1.6 equivalent module).
      *
      * @return array
      */
@@ -56,7 +56,7 @@ class MigrateData
     }
 
     /**
-     * Import the old CustomText data in the new structure
+     * Import the old CustomText data in the new structure.
      *
      * @return bool
      */

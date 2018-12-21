@@ -48,7 +48,7 @@ class CustomText extends ObjectModel
 	);
 
 	/**
-	 * Return the CustomText ID By shop ID
+	 * Return the CustomText ID By shop ID.
 	 * 
 	 * @param int $shopId
 	 *
