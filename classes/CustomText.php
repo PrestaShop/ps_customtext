@@ -36,16 +36,16 @@ class CustomText extends ObjectModel
      * @see ObjectModel::$definition
      */
     public static $definition = [
-	    'table' => 'info',
-	    'primary' => 'id_info',
-	    'multilang' => true,
-	    'multilang_shop' => true,
-	    'fields' => [
-	        'id_info' => ['type' => self::TYPE_NOTHING, 'validate' => 'isUnsignedId'],
-	        // Lang fields
-	        'text' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml', 'required' => true],
-	    ]
-	];
+        'table' => 'info',
+        'primary' => 'id_info',
+        'multilang' => true,
+        'multilang_shop' => true,
+        'fields' => [
+            'id_info' => ['type' => self::TYPE_NOTHING, 'validate' => 'isUnsignedId'],
+            // Lang fields
+            'text' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml', 'required' => true],
+        ]
+    ];
 
     /**
      * Return the CustomText ID By shop ID.
@@ -59,7 +59,7 @@ class CustomText extends ObjectModel
         $sql = 'SELECT i.`id_info` FROM `' . _DB_PREFIX_ . 'info` i
 		LEFT JOIN `' . _DB_PREFIX_ . 'info_shop` ish ON ish.`id_info` = i.`id_info`
 		WHERE ish.`id_shop` = ' . (int) $shopId;
-		
+        
         if ($result = Db::getInstance()->executeS($sql)) {
             return (int) reset($result)['id_info'];
         }
