@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-if (!defined('_PS_VERSION_')) {
+if ( ! defined('_PS_VERSION_')) {
     exit;
 }
 
@@ -147,12 +147,12 @@ class Ps_Customtext extends Module implements WidgetInterface
         $output = '';
 
         if (Tools::isSubmit('saveps_customtext')) {
-            if (!Tools::getValue('text_'.(int)Configuration::get('PS_LANG_DEFAULT'), false)) {
+            if ( ! Tools::getValue('text_'.(int)Configuration::get('PS_LANG_DEFAULT'), false)) {
                 $output = $this->displayError($this->trans('Please fill out all fields.', [], 'Admin.Notifications.Error')) . $this->renderForm();
             } else {
                 $update = $this->processSaveCustomText();
 
-                if (!$update) {
+                if ( ! $update) {
                     $output = '<div class="alert alert-danger conf error">'
                         .$this->trans('An error occurred on saving.', [], 'Admin.Notifications.Error')
                         .'</div>';
@@ -275,7 +275,7 @@ class Ps_Customtext extends Module implements WidgetInterface
 
     public function renderWidget($hookName = null, array $configuration = [])
     {
-        if (!$this->isCached($this->templateFile, $this->getCacheId('ps_customtext'))) {
+        if ( ! $this->isCached($this->templateFile, $this->getCacheId('ps_customtext'))) {
             $this->smarty->assign($this->getWidgetVariables($hookName, $configuration));
         }
 

@@ -46,7 +46,7 @@ class MigrateData
             INNER JOIN `' . _DB_PREFIX_ . 'info_lang` il ON il.`id_info` = i.`id_info`'
         );
 
-        if (is_array($texts) && !empty($texts)) {
+        if (is_array($texts) && ! empty($texts)) {
             foreach ($texts as $text) {
                 $this->loadedData[(int)$text['id_shop']][(int)$text['id_lang']] = $text['text'];
             }
