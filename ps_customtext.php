@@ -89,6 +89,7 @@ class Ps_Customtext extends Module implements WidgetInterface
         if ($oldModule) {
             $oldModule->uninstall();
         }
+
         return $this->uninstallDB()
             && $this->runInstallSteps()
             && $migration->insertData();
