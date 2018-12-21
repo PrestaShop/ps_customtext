@@ -26,16 +26,16 @@
 
 class CustomText extends ObjectModel
 {
-	/** @var int $id_info - the ID of CustomText */
-	public $id_info;
+    /** @var int $id_info - the ID of CustomText */
+    public $id_info;
 
-	/** @var string $text - HTML format of CustomText values */
-	public $text;
+    /** @var string $text - HTML format of CustomText values */
+    public $text;
 
-	/**
-	 * @see ObjectModel::$definition
-	 */
-	public static $definition = [
+    /**
+     * @see ObjectModel::$definition
+     */
+    public static $definition = [
 	    'table' => 'info',
 	    'primary' => 'id_info',
 	    'multilang' => true,
@@ -47,23 +47,23 @@ class CustomText extends ObjectModel
 	    ]
 	];
 
-	/**
-	 * Return the CustomText ID By shop ID.
-	 * 
-	 * @param int $shopId
-	 *
-	 * @return bool|int
-	 */
-	public static function getCustomTextIdByShop($shopId)
-	{
-		$sql = 'SELECT i.`id_info` FROM `' . _DB_PREFIX_ . 'info` i
+    /**
+     * Return the CustomText ID By shop ID.
+     * 
+     * @param int $shopId
+     *
+     * @return bool|int
+     */
+    public static function getCustomTextIdByShop($shopId)
+    {
+        $sql = 'SELECT i.`id_info` FROM `' . _DB_PREFIX_ . 'info` i
 		LEFT JOIN `' . _DB_PREFIX_ . 'info_shop` ish ON ish.`id_info` = i.`id_info`
 		WHERE ish.`id_shop` = ' . (int)$shopId;
 		
-		if ($result = Db::getInstance()->executeS($sql)) {
-			return (int) reset($result)['id_info'];
-		}
+        if ($result = Db::getInstance()->executeS($sql)) {
+            return (int) reset($result)['id_info'];
+        }
 
-		return false;
-	}
+        return false;
+    }
 }
