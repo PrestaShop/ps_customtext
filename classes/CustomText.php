@@ -36,15 +36,15 @@ class CustomText extends ObjectModel
 	 * @see ObjectModel::$definition
 	 */
 	public static $definition = array(
-		'table' => 'info',
-		'primary' => 'id_info',
-		'multilang' => true,
-		'multilang_shop' => true,
-		'fields' => array(
-			'id_info' =>			array('type' => self::TYPE_NOTHING, 'validate' => 'isUnsignedId'),
-			// Lang fields
-			'text' =>			array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml', 'required' => true),
-		)
+	    'table' => 'info',
+	    'primary' => 'id_info',
+	    'multilang' => true,
+	    'multilang_shop' => true,
+	    'fields' => array(
+	        'id_info' =>			array('type' => self::TYPE_NOTHING, 'validate' => 'isUnsignedId'),
+	        // Lang fields
+	        'text' =>			array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml', 'required' => true),
+	    )
 	);
 
 	/**
