@@ -316,7 +316,7 @@ class Ps_Customtext extends Module implements WidgetInterface
             $return &= $info->add();
         }
 
-        if($return && sizeof($shopsIds) > 1) {
+        if($return && count($shopsIds) > 1) {
             foreach ($shopsIds as $idShop) {
                 Shop::setContext(Shop::CONTEXT_SHOP,$idShop);
                 $info->text = $text;

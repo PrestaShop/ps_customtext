@@ -74,7 +74,7 @@ class MigrateData
         $info->text = reset($customTexts);
         $return &= $info->add();
 
-        if (sizeof($customTexts) > 1) {
+        if (count($customTexts) > 1) {
             foreach ($customTexts as $key => $text) {
                 Shop::setContext(Shop::CONTEXT_SHOP, (int) $key);
                 $info->text = $text;
