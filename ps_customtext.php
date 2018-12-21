@@ -148,7 +148,7 @@ class Ps_Customtext extends Module implements WidgetInterface
         $output = '';
 
         if (Tools::isSubmit('saveps_customtext')) {
-            if ( ! Tools::getValue('text_'.(int)Configuration::get('PS_LANG_DEFAULT'), false)) {
+            if ( ! Tools::getValue('text_'.(int) Configuration::get('PS_LANG_DEFAULT'), false)) {
                 $output = $this->displayError($this->trans('Please fill out all fields.', [], 'Admin.Notifications.Error')) . $this->renderForm();
             } else {
                 $update = $this->processSaveCustomText();
@@ -189,7 +189,7 @@ class Ps_Customtext extends Module implements WidgetInterface
 
     protected function renderForm()
     {
-        $default_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+        $default_lang = (int) Configuration::get('PS_LANG_DEFAULT');
 
         $fields_form = [
             'tinymce' => true,
@@ -265,7 +265,7 @@ class Ps_Customtext extends Module implements WidgetInterface
         $idInfo = CustomText::getCustomTextIdByShop($idShop);
 
         Shop::setContext(Shop::CONTEXT_SHOP, $idShop);
-        $info = new CustomText((int)$idInfo);
+        $info = new CustomText((int) $idInfo);
 
         $fields_value['text'] = $info->text;
         $fields_value['id_info'] = $idInfo;
@@ -285,7 +285,7 @@ class Ps_Customtext extends Module implements WidgetInterface
     public function getWidgetVariables($hookName = null, array $configuration = [])
     {
         $sql = 'SELECT * FROM `'._DB_PREFIX_.'info_lang`
-            WHERE `id_lang` = '.(int)$this->context->language->id.' AND  `id_shop` = '.(int)$this->context->shop->id;
+            WHERE `id_lang` = '.(int) $this->context->language->id.' AND  `id_shop` = '.(int) $this->context->shop->id;
 
         return [
             'cms_infos' => Db::getInstance()->getRow($sql),
