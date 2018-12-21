@@ -231,7 +231,6 @@ class Ps_Customtext extends Module implements WidgetInterface
             ];
         }
 
-
         $helper = new HelperForm();
         $helper->module = $this;
         $helper->name_controller = 'ps_customtext';
