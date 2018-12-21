@@ -31,7 +31,7 @@ if ( ! defined('_PS_VERSION_')) {
 
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 
-require_once _PS_MODULE_DIR_.'ps_customtext/classes/CustomText.php';
+require_once _PS_MODULE_DIR_ . 'ps_customtext/classes/CustomText.php';
 
 class Ps_Customtext extends Module implements WidgetInterface
 {
@@ -81,7 +81,7 @@ class Ps_Customtext extends Module implements WidgetInterface
 
     public function installFrom16Version()
     {
-        require_once _PS_MODULE_DIR_.$this->name.'/classes/MigrateData.php';
+        require_once _PS_MODULE_DIR_ . $this->name . '/classes/MigrateData.php';
         $migration = new MigrateData();
         $migration->retrieveOldData();
 
@@ -104,10 +104,10 @@ class Ps_Customtext extends Module implements WidgetInterface
     {
         $return = true;
         $return &= Db::getInstance()->execute('
-                CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'info` (
+                CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'info` (
                 `id_info` INT UNSIGNED NOT NULL AUTO_INCREMENT,
                 PRIMARY KEY (`id_info`)
-            ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8 ;'
+            ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8 ;'
         );
 
         $return &= Db::getInstance()->execute('
@@ -119,13 +119,13 @@ class Ps_Customtext extends Module implements WidgetInterface
         );
 
         $return &= Db::getInstance()->execute('
-                CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'info_lang` (
+                CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'info_lang` (
                 `id_info` INT UNSIGNED NOT NULL,
                 `id_shop` INT(10) UNSIGNED NOT NULL,
                 `id_lang` INT(10) UNSIGNED NOT NULL ,
                 `text` text NOT NULL,
                 PRIMARY KEY (`id_info`, `id_lang`, `id_shop`)
-            ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8 ;'
+            ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8 ;'
         );
 
         return $return;
@@ -148,22 +148,22 @@ class Ps_Customtext extends Module implements WidgetInterface
         $output = '';
 
         if (Tools::isSubmit('saveps_customtext')) {
-            if ( ! Tools::getValue('text_'.(int) Configuration::get('PS_LANG_DEFAULT'), false)) {
+            if ( ! Tools::getValue('text_' . (int) Configuration::get('PS_LANG_DEFAULT'), false)) {
                 $output = $this->displayError($this->trans('Please fill out all fields.', [], 'Admin.Notifications.Error')) . $this->renderForm();
             } else {
                 $update = $this->processSaveCustomText();
 
                 if ( ! $update) {
                     $output = '<div class="alert alert-danger conf error">'
-                        .$this->trans('An error occurred on saving.', [], 'Admin.Notifications.Error')
-                        .'</div>';
+                        . $this->trans('An error occurred on saving.', [], 'Admin.Notifications.Error')
+                        . '</div>';
                 }
 
                 $this->_clearCache($this->templateFile);
             }
         }
 
-        return $output.$this->renderForm();
+        return $output . $this->renderForm();
     }
 
     public function processSaveCustomText()
@@ -173,7 +173,7 @@ class Ps_Customtext extends Module implements WidgetInterface
         $languages = Language::getLanguages(false);
 
         foreach ($languages as $lang) {
-            $text[$lang['id_lang']] = Tools::getValue('text_'.$lang['id_lang']);
+            $text[$lang['id_lang']] = Tools::getValue('text_' . $lang['id_lang']);
         }
 
         $saved = true;
@@ -217,7 +217,7 @@ class Ps_Customtext extends Module implements WidgetInterface
             ],
             'buttons' => [
                 [
-                    'href' => AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules'),
+                    'href' => AdminController::$currentIndex . '&configure=' . $this->name . '&token=' . Tools::getAdminTokenLite('AdminModules'),
                     'title' => $this->trans('Back to list', [], 'Admin.Actions'),
                     'icon' => 'process-icon-back'
                 ]
@@ -246,7 +246,7 @@ class Ps_Customtext extends Module implements WidgetInterface
             ];
         }
 
-        $helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
+        $helper->currentIndex = AdminController::$currentIndex . '&configure=' . $this->name;
         $helper->default_form_language = $default_lang;
         $helper->allow_employee_form_lang = $default_lang;
         $helper->toolbar_scroll = true;
@@ -284,8 +284,8 @@ class Ps_Customtext extends Module implements WidgetInterface
 
     public function getWidgetVariables($hookName = null, array $configuration = [])
     {
-        $sql = 'SELECT * FROM `'._DB_PREFIX_.'info_lang`
-            WHERE `id_lang` = '.(int) $this->context->language->id.' AND  `id_shop` = '.(int) $this->context->shop->id;
+        $sql = 'SELECT * FROM `' . _DB_PREFIX_ . 'info_lang`
+            WHERE `id_lang` = ' . (int) $this->context->language->id . ' AND  `id_shop` = ' . (int) $this->context->shop->id;
 
         return [
             'cms_infos' => Db::getInstance()->getRow($sql),
