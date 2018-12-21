@@ -35,17 +35,17 @@ class CustomText extends ObjectModel
 	/**
 	 * @see ObjectModel::$definition
 	 */
-	public static $definition = array(
+	public static $definition = [
 	    'table' => 'info',
 	    'primary' => 'id_info',
 	    'multilang' => true,
 	    'multilang_shop' => true,
-	    'fields' => array(
-	        'id_info' =>			array('type' => self::TYPE_NOTHING, 'validate' => 'isUnsignedId'),
+	    'fields' => [
+	        'id_info' =>			['type' => self::TYPE_NOTHING, 'validate' => 'isUnsignedId'],
 	        // Lang fields
-	        'text' =>			array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml', 'required' => true),
-	    )
-	);
+	        'text' =>			['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml', 'required' => true],
+	    ]
+	];
 
 	/**
 	 * Return the CustomText ID By shop ID.

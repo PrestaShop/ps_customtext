@@ -50,12 +50,12 @@ class Ps_Customtext extends Module implements WidgetInterface
         $this->bootstrap = true;
         parent::__construct();
 
-        Shop::addTableAssociation('info', array('type' => 'shop'));
+        Shop::addTableAssociation('info', ['type' => 'shop']);
 
-        $this->displayName = $this->trans('Custom text blocks', array(), 'Modules.Customtext.Admin');
-        $this->description = $this->trans('Integrates custom text blocks anywhere in your store front', array(), 'Modules.Customtext.Admin');
+        $this->displayName = $this->trans('Custom text blocks', [], 'Modules.Customtext.Admin');
+        $this->description = $this->trans('Integrates custom text blocks anywhere in your store front', [], 'Modules.Customtext.Admin');
 
-        $this->ps_versions_compliancy = array('min' => '1.7.4.0', 'max' => _PS_VERSION_);
+        $this->ps_versions_compliancy = ['min' => '1.7.4.0', 'max' => _PS_VERSION_];
 
         $this->templateFile = 'module:ps_customtext/ps_customtext.tpl';
     }
@@ -148,13 +148,13 @@ class Ps_Customtext extends Module implements WidgetInterface
 
         if (Tools::isSubmit('saveps_customtext')) {
             if (!Tools::getValue('text_'.(int)Configuration::get('PS_LANG_DEFAULT'), false)) {
-                $output = $this->displayError($this->trans('Please fill out all fields.', array(), 'Admin.Notifications.Error')) . $this->renderForm();
+                $output = $this->displayError($this->trans('Please fill out all fields.', [], 'Admin.Notifications.Error')) . $this->renderForm();
             } else {
                 $update = $this->processSaveCustomText();
 
                 if (!$update) {
                     $output = '<div class="alert alert-danger conf error">'
-                        .$this->trans('An error occurred on saving.', array(), 'Admin.Notifications.Error')
+                        .$this->trans('An error occurred on saving.', [], 'Admin.Notifications.Error')
                         .'</div>';
                 }
 
@@ -167,8 +167,8 @@ class Ps_Customtext extends Module implements WidgetInterface
 
     public function processSaveCustomText()
     {
-        $shops = Tools::getValue('checkBoxShopAsso_configuration', array($this->context->shop->id));
-        $text = array();
+        $shops = Tools::getValue('checkBoxShopAsso_configuration', [$this->context->shop->id]);
+        $text = [];
         $languages = Language::getLanguages(false);
 
         foreach ($languages as $lang) {
@@ -190,45 +190,45 @@ class Ps_Customtext extends Module implements WidgetInterface
     {
         $default_lang = (int)Configuration::get('PS_LANG_DEFAULT');
 
-        $fields_form = array(
+        $fields_form = [
             'tinymce' => true,
-            'legend' => array(
-                'title' => $this->trans('CMS block', array(), 'Modules.Customtext.Admin'),
-            ),
-            'input' => array(
-                'id_info' => array(
+            'legend' => [
+                'title' => $this->trans('CMS block', [], 'Modules.Customtext.Admin'),
+            ],
+            'input' => [
+                'id_info' => [
                     'type' => 'hidden',
                     'name' => 'id_info'
-                ),
-                'content' => array(
+                ],
+                'content' => [
                     'type' => 'textarea',
-                    'label' => $this->trans('Text block', array(), 'Modules.Customtext.Admin'),
+                    'label' => $this->trans('Text block', [], 'Modules.Customtext.Admin'),
                     'lang' => true,
                     'name' => 'text',
                     'cols' => 40,
                     'rows' => 10,
                     'class' => 'rte',
                     'autoload_rte' => true,
-                ),
-            ),
-            'submit' => array(
-                'title' => $this->trans('Save', array(), 'Admin.Actions'),
-            ),
-            'buttons' => array(
-                array(
+                ],
+            ],
+            'submit' => [
+                'title' => $this->trans('Save', [], 'Admin.Actions'),
+            ],
+            'buttons' => [
+                [
                     'href' => AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules'),
-                    'title' => $this->trans('Back to list', array(), 'Admin.Actions'),
+                    'title' => $this->trans('Back to list', [], 'Admin.Actions'),
                     'icon' => 'process-icon-back'
-                )
-            )
-        );
+                ]
+            ]
+        ];
 
         if (Shop::isFeatureActive() && Tools::getValue('id_info') == false) {
-            $fields_form['input'][] = array(
+            $fields_form['input'][] = [
                 'type' => 'shop',
-                'label' => $this->trans('Shop association', array(), 'Admin.Global'),
+                'label' => $this->trans('Shop association', [], 'Admin.Global'),
                 'name' => 'checkBoxShopAsso_theme'
-            );
+            ];
         }
 
 
@@ -238,12 +238,12 @@ class Ps_Customtext extends Module implements WidgetInterface
         $helper->identifier = $this->identifier;
         $helper->token = Tools::getAdminTokenLite('AdminModules');
         foreach (Language::getLanguages(false) as $lang) {
-            $helper->languages[] = array(
+            $helper->languages[] = [
                 'id_lang' => $lang['id_lang'],
                 'iso_code' => $lang['iso_code'],
                 'name' => $lang['name'],
                 'is_default' => ($default_lang == $lang['id_lang'] ? 1 : 0)
-            );
+            ];
         }
 
         $helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
@@ -255,12 +255,12 @@ class Ps_Customtext extends Module implements WidgetInterface
 
         $helper->fields_value = $this->getFormValues();
 
-        return $helper->generateForm(array(array('form' => $fields_form)));
+        return $helper->generateForm([['form' => $fields_form]]);
     }
 
     public function getFormValues()
     {
-        $fields_value = array();
+        $fields_value = [];
         $idShop = $this->context->shop->id;
         $idInfo = CustomText::getCustomTextIdByShop($idShop);
 
@@ -286,25 +286,25 @@ class Ps_Customtext extends Module implements WidgetInterface
         $sql = 'SELECT * FROM `'._DB_PREFIX_.'info_lang`
             WHERE `id_lang` = '.(int)$this->context->language->id.' AND  `id_shop` = '.(int)$this->context->shop->id;
 
-        return array(
+        return [
             'cms_infos' => Db::getInstance()->getRow($sql),
-        );
+        ];
     }
 
     public function installFixtures()
     {
         $return = true;
-        $tabTexts = array(
-            array(
+        $tabTexts = [
+            [
                 'text' => '<h2>Custom Text Block</h2>
 <p><strong class="dark">Lorem ipsum dolor sit amet conse ctetu</strong></p>
 <p>Sit amet conse ctetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit.</p>'
-            ),
-        );
+            ],
+        ];
 
         $shopsIds = Shop::getShops(true, null, true);
         $languages = Language::getLanguages(false);
-        $text = array();
+        $text = [];
 
         foreach ($tabTexts as $tab) {
             $info = new CustomText();
