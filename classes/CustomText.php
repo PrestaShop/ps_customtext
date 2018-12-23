@@ -29,7 +29,7 @@ class CustomText extends ObjectModel
     /** @var int $id_info - the ID of CustomText */
 	public $id_info;
 
-    /** @var String $text - HTML format of CustomText values */
+    /** @var string $text - HTML format of CustomText values */
 	public $text;
 
 	/**
