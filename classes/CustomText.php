@@ -51,6 +51,7 @@ class CustomText extends ObjectModel
 	 * Return the CustomText ID By shop ID
 	 * 
 	 * @param int $shopId
+	 *
 	 * @return bool|int
 	 */
 	public static function getCustomTextIdByShop($shopId)

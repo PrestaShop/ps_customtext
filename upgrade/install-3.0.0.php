@@ -32,6 +32,7 @@ if (!defined('_PS_VERSION_')) {
  * Upgrade the Ps_Customtext module to V3.0.0
  *
  * @param Ps_Customtext $module
+ *
  * @return bool
  */
 function upgrade_module_3_0_0($module)
