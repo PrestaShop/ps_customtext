@@ -281,6 +281,7 @@ class Ps_Customtext extends Module implements WidgetInterface
 
         return $this->fetch($this->templateFile, $this->getCacheId('ps_customtext'));
     }
+
     public function getWidgetVariables($hookName = null, array $configuration = [])
     {
         $sql = 'SELECT * FROM `'._DB_PREFIX_.'info_lang`
