@@ -198,7 +198,7 @@ class Ps_Customtext extends Module implements WidgetInterface
             'input' => array(
                 'id_info' => array(
                     'type' => 'hidden',
-                    'name' => 'id_info'
+                    'name' => 'id_info',
                 ),
                 'content' => array(
                     'type' => 'textarea',
@@ -218,16 +218,16 @@ class Ps_Customtext extends Module implements WidgetInterface
                 array(
                     'href' => AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules'),
                     'title' => $this->trans('Back to list', array(), 'Admin.Actions'),
-                    'icon' => 'process-icon-back'
-                )
-            )
+                    'icon' => 'process-icon-back',
+                ),
+            ),
         );
 
         if (Shop::isFeatureActive() && Tools::getValue('id_info') == false) {
             $fields_form['input'][] = array(
                 'type' => 'shop',
                 'label' => $this->trans('Shop association', array(), 'Admin.Global'),
-                'name' => 'checkBoxShopAsso_theme'
+                'name' => 'checkBoxShopAsso_theme',
             );
         }
 
@@ -242,7 +242,7 @@ class Ps_Customtext extends Module implements WidgetInterface
                 'id_lang' => $lang['id_lang'],
                 'iso_code' => $lang['iso_code'],
                 'name' => $lang['name'],
-                'is_default' => ($default_lang == $lang['id_lang'] ? 1 : 0)
+                'is_default' => ($default_lang == $lang['id_lang'] ? 1 : 0),
             );
         }
 
@@ -298,7 +298,7 @@ class Ps_Customtext extends Module implements WidgetInterface
             array(
                 'text' => '<h2>Custom Text Block</h2>
 <p><strong class="dark">Lorem ipsum dolor sit amet conse ctetu</strong></p>
-<p>Sit amet conse ctetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit.</p>'
+<p>Sit amet conse ctetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit.</p>',
             ),
         );
 
