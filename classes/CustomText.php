@@ -41,9 +41,9 @@ class CustomText extends ObjectModel
 		'multilang' => true,
 		'multilang_shop' => true,
 		'fields' => array(
-			'id_info' =>			array('type' => self::TYPE_NOTHING, 'validate' => 'isUnsignedId'),
+			'id_info' => array('type' => self::TYPE_NOTHING, 'validate' => 'isUnsignedId'),
 			// Lang fields
-			'text' =>			array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml', 'required' => true),
+			'text' => array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml', 'required' => true),
 		)
 	);
 
