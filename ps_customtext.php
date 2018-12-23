@@ -62,7 +62,7 @@ class Ps_Customtext extends Module implements WidgetInterface
 
     public function install()
     {
-         // Remove 1.6 equivalent module to avoid DB issues
+        // Remove 1.6 equivalent module to avoid DB issues
         if (Module::isInstalled(self::MODULE_16)) {
             return $this->installFrom16Version();
         }
@@ -315,7 +315,7 @@ class Ps_Customtext extends Module implements WidgetInterface
             $return &= $info->add();
         }
 
-        if($return && sizeof($shopsIds) > 1) {
+        if ($return && sizeof($shopsIds) > 1) {
             foreach ($shopsIds as $idShop) {
                 Shop::setContext(Shop::CONTEXT_SHOP,$idShop);
                 $info->text = $text;
