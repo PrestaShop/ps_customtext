@@ -327,7 +327,7 @@ class Ps_Customtext extends Module implements WidgetInterface
     }
 
     /**
-     * Add CustomText when adding a new Shop
+     * Add CustomText when adding a new Shop.
      *
      * @param array $params
      */
