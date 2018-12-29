@@ -148,7 +148,7 @@ class Ps_Customtext extends Module implements WidgetInterface
 
         if (Tools::isSubmit('saveps_customtext')) {
             if (!Tools::getValue('text_'.(int)Configuration::get('PS_LANG_DEFAULT'), false)) {
-                $output = $this->displayError($this->trans('Please fill out all fields.', array(), 'Admin.Notifications.Error')) . $this->renderForm();
+                $output = $this->displayError($this->trans('Please fill out all fields.', array(), 'Admin.Notifications.Error'));
             } else {
                 $update = $this->processSaveCustomText();
 
