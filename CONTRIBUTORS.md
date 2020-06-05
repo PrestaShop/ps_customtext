@@ -1,0 +1,23 @@
+GitHub contributors:
+--------------------------------
+ - Alex Even
+ - AlexEven
+ - Francois Gaillard
+ - Jerome Nadaud
+ - Jérôme Nadaud
+ - Jérôme Nadaud
+ - Maxime Biloé
+ - Nobodaddy
+ - Quetzacoalt91
+ - aleeks
+ - antoin-m
+ - djfm
+ - emilien-puget
+ - eternoendless
+ - fatmaBouchekoua
+ - gRoussac
+ - julienbourdeau
+ - maximebiloe
+ - sLorenzini
+ - tchauviere
+ - xBorderie
