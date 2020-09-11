@@ -25,10 +25,18 @@
  */
 class CustomText extends ObjectModel
 {
-    /** @var int - the ID of CustomText */
+    /**
+     * Identifier of CustomText
+     *
+     * @var int
+     */
     public $id_info;
 
-    /** @var string - HTML format of CustomText values */
+    /**
+     * HTML format of CustomText values
+     *
+     * @var array
+     */
     public $text;
 
     /**

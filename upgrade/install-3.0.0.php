@@ -52,5 +52,5 @@ function upgrade_module_3_0_0($module)
     /* Reset DB data */
     $return &= $migration->insertData();
 
-    return $return;
+    return (bool) $return;
 }

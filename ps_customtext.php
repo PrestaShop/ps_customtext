@@ -171,7 +171,7 @@ class Ps_Customtext extends Module implements WidgetInterface
         $languages = Language::getLanguages(false);
 
         foreach ($languages as $lang) {
-            $text[$lang['id_lang']] = Tools::getValue('text_' . $lang['id_lang']);
+            $text[$lang['id_lang']] = (string) Tools::getValue('text_' . $lang['id_lang']);
         }
 
         $saved = true;

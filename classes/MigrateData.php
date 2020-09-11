@@ -82,6 +82,6 @@ class MigrateData
             }
         }
 
-        return $return;
+        return (bool) $return;
     }
 }
