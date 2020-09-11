@@ -30,7 +30,7 @@
  */
 class MigrateData
 {
-    private $loadedData = array();
+    private $loadedData = [];
 
     /**
      * This methods retrieves data from older database models
@@ -41,14 +41,14 @@ class MigrateData
      */
     public function retrieveOldData()
     {
-        $this->loadedData = array();
+        $this->loadedData = [];
         $texts = Db::getInstance()->executeS('SELECT i.`id_shop`, il.`id_lang`, il.`text` FROM `' . _DB_PREFIX_ . 'info` i
             INNER JOIN `' . _DB_PREFIX_ . 'info_lang` il ON il.`id_info` = i.`id_info`'
         );
 
         if (is_array($texts) && !empty($texts)) {
             foreach ($texts as $text) {
-                $this->loadedData[(int)$text['id_shop']][(int)$text['id_lang']] = $text['text'];
+                $this->loadedData[(int) $text['id_shop']][(int) $text['id_lang']] = $text['text'];
             }
         }
 
@@ -65,7 +65,7 @@ class MigrateData
         if (empty($this->loadedData)) {
             return true;
         }
-        
+
         $return = true;
         $shopsIds = Shop::getShops(true, null, true);
         $customTexts = array_intersect_key($this->loadedData, $shopsIds);

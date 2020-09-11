@@ -23,46 +23,46 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  */
-
 class CustomText extends ObjectModel
 {
-    /** @var int $id_info - the ID of CustomText */
-	public $id_info;
+    /** @var int - the ID of CustomText */
+    public $id_info;
 
-    /** @var String $text - HTML format of CustomText values */
-	public $text;
+    /** @var string - HTML format of CustomText values */
+    public $text;
 
-	/**
-	 * @see ObjectModel::$definition
-	 */
-	public static $definition = array(
-		'table' => 'info',
-		'primary' => 'id_info',
-		'multilang' => true,
-		'multilang_shop' => true,
-		'fields' => array(
-			'id_info' =>			array('type' => self::TYPE_NOTHING, 'validate' => 'isUnsignedId'),
-			// Lang fields
-			'text' =>			array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml', 'required' => true),
-		)
-	);
+    /**
+     * @see ObjectModel::$definition
+     */
+    public static $definition = [
+        'table' => 'info',
+        'primary' => 'id_info',
+        'multilang' => true,
+        'multilang_shop' => true,
+        'fields' => [
+            'id_info' => ['type' => self::TYPE_NOTHING, 'validate' => 'isUnsignedId'],
+            // Lang fields
+            'text' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml', 'required' => true],
+        ],
+    ];
 
-	/**
-	 * Return the CustomText ID By shop ID
-	 * 
-	 * @param int $shopId
-	 * @return bool|int
-	 */
-	public static function getCustomTextIdByShop($shopId)
-	{
-		$sql = 'SELECT i.`id_info` FROM `' . _DB_PREFIX_ . 'info` i
+    /**
+     * Return the CustomText ID By shop ID
+     *
+     * @param int $shopId
+     *
+     * @return bool|int
+     */
+    public static function getCustomTextIdByShop($shopId)
+    {
+        $sql = 'SELECT i.`id_info` FROM `' . _DB_PREFIX_ . 'info` i
 		LEFT JOIN `' . _DB_PREFIX_ . 'info_shop` ish ON ish.`id_info` = i.`id_info`
-		WHERE ish.`id_shop` = ' . (int)$shopId;
-		
-		if ($result = Db::getInstance()->executeS($sql)) {
-			return (int) reset($result)['id_info'];
-		}
+		WHERE ish.`id_shop` = ' . (int) $shopId;
 
-		return false;
-	}
+        if ($result = Db::getInstance()->executeS($sql)) {
+            return (int) reset($result)['id_info'];
+        }
+
+        return false;
+    }
 }
