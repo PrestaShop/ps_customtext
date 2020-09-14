@@ -23,7 +23,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  */
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -32,11 +31,12 @@ if (!defined('_PS_VERSION_')) {
  * Upgrade the Ps_Customtext module to V3.0.0
  *
  * @param Ps_Customtext $module
+ *
  * @return bool
  */
 function upgrade_module_3_0_0($module)
 {
-    require_once _PS_MODULE_DIR_.$module->name.'/classes/MigrateData.php';
+    require_once _PS_MODULE_DIR_ . $module->name . '/classes/MigrateData.php';
     $migration = new MigrateData();
 
     $return = true;
@@ -44,13 +44,13 @@ function upgrade_module_3_0_0($module)
     $migration->retrieveOldData();
     $return &= $module->uninstallDB();
 
-    /** Register the hook responsible for adding custom text when adding a new store */
+    /* Register the hook responsible for adding custom text when adding a new store */
     $return &= $module->registerHook('actionShopDataDuplication');
 
     $return &= $module->installDB();
 
-    /** Reset DB data */
+    /* Reset DB data */
     $return &= $migration->insertData();
 
-    return $return;
+    return (bool) $return;
 }
