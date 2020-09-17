@@ -1,0 +1,16 @@
+includes:
+	- %currentWorkingDirectory%/vendor/prestashop/php-dev-tools/phpstan/ps-module-extension.neon
+
+parameters:
+  paths:
+    # From PHPStan 0.12, paths to check are relative to the neon file
+    - ../../ps_customtext.php
+    - ../../classes/
+    - ../../upgrade/
+  ignoreErrors:
+    - '#If condition is always true.#'
+    - '#Property CustomText::$text \(string\) does not accept array<int|string, string>.#'
+    ## On 1.7.1.0
+    - '#Call to method assign\(\) on an unknown class Smarty_Data#'
+  reportUnmatchedIgnoredErrors: false
+  level: 5
