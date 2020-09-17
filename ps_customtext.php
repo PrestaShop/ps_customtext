@@ -158,6 +158,10 @@ class Ps_Customtext extends Module implements WidgetInterface
                 }
 
                 $this->_clearCache($this->templateFile);
+                
+                if ($update) {
+                    Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules').'&configure='.$this->name.'&conf=4');
+                }
             }
         }
 
