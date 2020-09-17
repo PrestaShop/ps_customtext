@@ -212,14 +212,7 @@ class Ps_Customtext extends Module implements WidgetInterface
             ],
             'submit' => [
                 'title' => $this->trans('Save', [], 'Admin.Actions'),
-            ],
-            'buttons' => [
-                [
-                    'href' => AdminController::$currentIndex . '&configure=' . $this->name . '&token=' . Tools::getAdminTokenLite('AdminModules'),
-                    'title' => $this->trans('Back to list', [], 'Admin.Actions'),
-                    'icon' => 'process-icon-back',
-                ],
-            ],
+            ]
         ];
 
         if (Shop::isFeatureActive() && Tools::getValue('id_info') == false) {
