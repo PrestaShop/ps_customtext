@@ -158,9 +158,9 @@ class Ps_Customtext extends Module implements WidgetInterface
                 }
 
                 $this->_clearCache($this->templateFile);
-                
+
                 if ($update) {
-                    Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules').'&configure='.$this->name.'&conf=4');
+                    Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules') . '&configure=' . $this->name . '&conf=4');
                 }
             }
         }
@@ -216,7 +216,7 @@ class Ps_Customtext extends Module implements WidgetInterface
             ],
             'submit' => [
                 'title' => $this->trans('Save', [], 'Admin.Actions'),
-            ]
+            ],
         ];
 
         if (Shop::isFeatureActive() && Tools::getValue('id_info') == false) {
