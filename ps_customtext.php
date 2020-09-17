@@ -50,8 +50,8 @@ class Ps_Customtext extends Module implements WidgetInterface
 
         Shop::addTableAssociation('info', ['type' => 'shop']);
 
-        $this->displayName = $this->trans('Custom text blocks', [], 'Modules.Customtext.Admin');
-        $this->description = $this->trans('Integrates custom text blocks anywhere in your store front', [], 'Modules.Customtext.Admin');
+        $this->displayName = $this->trans('Custom text block', [], 'Modules.Customtext.Admin');
+        $this->description = $this->trans('Integrates custom text block anywhere in your store front', [], 'Modules.Customtext.Admin');
 
         $this->ps_versions_compliancy = ['min' => '1.7.4.0', 'max' => _PS_VERSION_];
 
@@ -196,7 +196,7 @@ class Ps_Customtext extends Module implements WidgetInterface
         $fields_form = [
             'tinymce' => true,
             'legend' => [
-                'title' => $this->trans('CMS block', [], 'Modules.Customtext.Admin'),
+                'title' => $this->trans('Custom text block', [], 'Modules.Customtext.Admin'),
             ],
             'input' => [
                 'id_info' => [
