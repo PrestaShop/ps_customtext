@@ -2,7 +2,7 @@
 
 ## About
 
-Adds custom text in your store.
+Give your visitors extra information, display a customized block of content on your homepage.
 
 ## Reporting issues
 
