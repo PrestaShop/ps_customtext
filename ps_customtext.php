@@ -51,7 +51,7 @@ class Ps_Customtext extends Module implements WidgetInterface
         Shop::addTableAssociation('info', ['type' => 'shop']);
 
         $this->displayName = $this->trans('Custom text block', [], 'Modules.Customtext.Admin');
-        $this->description = $this->trans('Provide your visitors with extra information, display a customized block of content on the homepage of your store.', [], 'Modules.Customtext.Admin');
+        $this->description = $this->trans('Give your visitors extra information, display a customized block of content on your homepage.', [], 'Modules.Customtext.Admin');
 
         $this->ps_versions_compliancy = ['min' => '1.7.4.0', 'max' => _PS_VERSION_];
 
