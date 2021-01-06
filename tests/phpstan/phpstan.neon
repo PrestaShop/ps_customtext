@@ -10,6 +10,9 @@ parameters:
   ignoreErrors:
     - '#If condition is always true.#'
     - '#Property CustomText::$text \(string\) does not accept array<int|string, string>.#'
+    - '#Instantiated class PrestaShop\\PrestaShop\\Adapter\\Presenter\\Object\\ObjectPresenter not found.#'
+    - '#Call to method present\(\) on an unknown class PrestaShop\\PrestaShop\\Adapter\\Presenter\\Object\\ObjectPresenter.#'
+    - "#Cannot unset offset 'id' on array\\('id_lang' => mixed, 'id_shop' => int\\).#"
     ## On 1.7.1.0
     - '#Call to method assign\(\) on an unknown class Smarty_Data#'
   reportUnmatchedIgnoredErrors: false

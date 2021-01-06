@@ -27,6 +27,7 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 
 require_once _PS_MODULE_DIR_ . 'ps_customtext/classes/CustomText.php';
@@ -279,12 +280,14 @@ class Ps_Customtext extends Module implements WidgetInterface
 
     public function getWidgetVariables($hookName = null, array $configuration = [])
     {
-        $sql = 'SELECT * FROM `' . _DB_PREFIX_ . 'info_lang`
-            WHERE `id_lang` = ' . (int) $this->context->language->id . ' AND  `id_shop` = ' . (int) $this->context->shop->id;
+        $customText = new CustomText(1, (int) $this->context->language->id, (int) $this->context->shop->id);
+        $objectPresenter = new ObjectPresenter();
+        $data = $objectPresenter->present($customText);
+        $data['id_lang'] = $this->context->language->id;
+        $data['id_shop'] = $this->context->shop->id;
+        unset($data['id']);
 
-        return [
-            'cms_infos' => Db::getInstance()->getRow($sql),
-        ];
+        return ['cms_infos' => $data];
     }
 
     public function installFixtures()
