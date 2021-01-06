@@ -279,12 +279,15 @@ class Ps_Customtext extends Module implements WidgetInterface
 
     public function getWidgetVariables($hookName = null, array $configuration = [])
     {
-        $sql = 'SELECT * FROM `' . _DB_PREFIX_ . 'info_lang`
-            WHERE `id_lang` = ' . (int) $this->context->language->id . ' AND  `id_shop` = ' . (int) $this->context->shop->id;
+        $ct = new CustomText(1, (int) $this->context->language->id, (int) $this->context->shop->id);
+        $op = new ObjectPresenter();
+        $pobj = $op->present($ct);
+        $pobj['id_lang'] = $this->context->language->id;
+        $pobj['id_shop'] = $this->context->shop->id;
+        unset($pobj['id']);
+        $ret = ['cms_infos' => $pobj];
 
-        return [
-            'cms_infos' => Db::getInstance()->getRow($sql),
-        ];
+        return $ret;
     }
 
     public function installFixtures()
