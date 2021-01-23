@@ -191,8 +191,6 @@ class Ps_Customtext extends Module implements WidgetInterface
 
     protected function renderForm()
     {
-        $default_lang = (int) Configuration::get('PS_LANG_DEFAULT');
-
         $fields_form = [
             'tinymce' => true,
             'legend' => [
@@ -219,7 +217,7 @@ class Ps_Customtext extends Module implements WidgetInterface
             ],
         ];
 
-        if (Shop::isFeatureActive() && Tools::getValue('id_info') == false) {
+        if (Shop::isFeatureActive()) {
             $fields_form['input'][] = [
                 'type' => 'shop',
                 'label' => $this->trans('Shop association', [], 'Admin.Global'),
@@ -228,27 +226,18 @@ class Ps_Customtext extends Module implements WidgetInterface
         }
 
         $helper = new HelperForm();
-        $helper->module = $this;
-        $helper->name_controller = 'ps_customtext';
+        $helper->show_toolbar = false;
+        $lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+        $helper->default_form_language = $lang->id;
+        $helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+        $this->fields_form = array();
         $helper->identifier = $this->identifier;
-        $helper->token = Tools::getAdminTokenLite('AdminModules');
-        foreach (Language::getLanguages(false) as $lang) {
-            $helper->languages[] = [
-                'id_lang' => $lang['id_lang'],
-                'iso_code' => $lang['iso_code'],
-                'name' => $lang['name'],
-                'is_default' => ($default_lang == $lang['id_lang'] ? 1 : 0),
-            ];
-        }
-
-        $helper->currentIndex = AdminController::$currentIndex . '&configure=' . $this->name;
-        $helper->default_form_language = $default_lang;
-        $helper->allow_employee_form_lang = $default_lang;
-        $helper->toolbar_scroll = true;
-        $helper->title = $this->displayName;
         $helper->submit_action = 'saveps_customtext';
-
-        $helper->fields_value = $this->getFormValues();
+        $helper->tpl_vars = array(
+            'fields_value' => $this->getFormValues(),
+            'languages' => $this->context->controller->getLanguages(),
+            'id_language' => $this->context->language->id
+        );
 
         return $helper->generateForm([['form' => $fields_form]]);
     }
