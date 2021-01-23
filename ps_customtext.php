@@ -259,8 +259,7 @@ class Ps_Customtext extends Module implements WidgetInterface
         $idShop = $this->context->shop->id;
         $idInfo = CustomText::getCustomTextIdByShop($idShop);
 
-        Shop::setContext(Shop::CONTEXT_SHOP, $idShop);
-        $info = new CustomText((int) $idInfo);
+        $info = new CustomText((int) $idInfo, null, $idShop);
 
         $fields_value['text'] = $info->text;
         $fields_value['id_info'] = $idInfo;
