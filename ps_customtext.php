@@ -170,6 +170,9 @@ class Ps_Customtext extends Module implements WidgetInterface
 
     public function processSaveCustomText()
     {
+        $shopCurrentContext = Shop::getContext();
+        $shopCurrentId = $this->context->shop->id;
+        $shopCurrentGroupId = Shop::getContextShopGroupID();
         $shops = Tools::getValue('checkBoxShopAsso_configuration', [$this->context->shop->id]);
         $text = [];
         $languages = Language::getLanguages(false);
@@ -181,9 +184,17 @@ class Ps_Customtext extends Module implements WidgetInterface
         $saved = true;
         foreach ($shops as $shop) {
             Shop::setContext(Shop::CONTEXT_SHOP, $shop);
-            $info = new CustomText(Tools::getValue('id_info', 1));
+            $info = new CustomText((int) Tools::getValue('id_info', 1), null, $shop);
             $info->text = $text;
             $saved &= $info->save();
+        }
+
+        if ($shopCurrentContext == Shop::CONTEXT_SHOP) {
+            Shop::setContext(Shop::CONTEXT_SHOP, $shopCurrentId);
+        } elseif ($shopCurrentContext == Shop::CONTEXT_GROUP) {
+            Shop::setContext(Shop::CONTEXT_GROUP, $shopCurrentGroupId);
+        } elseif ($shopCurrentContext == Shop::CONTEXT_ALL) {
+            Shop::setContext(Shop::CONTEXT_ALL);
         }
 
         return $saved;
