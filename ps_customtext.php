@@ -36,6 +36,9 @@ class Ps_Customtext extends Module implements WidgetInterface
     // Equivalent module on PrestaShop 1.6, sharing the same data
     const MODULE_16 = 'blockcmsinfo';
 
+    /**
+     * @var string Template used by widget
+     */
     private $templateFile;
 
     public function __construct()
@@ -58,6 +61,9 @@ class Ps_Customtext extends Module implements WidgetInterface
         $this->templateFile = 'module:ps_customtext/ps_customtext.tpl';
     }
 
+    /**
+     * @return bool
+     */
     public function install()
     {
         // Remove 1.6 equivalent module to avoid DB issues
@@ -69,6 +75,9 @@ class Ps_Customtext extends Module implements WidgetInterface
             && $this->installFixtures();
     }
 
+    /**
+     * @return bool
+     */
     public function runInstallSteps()
     {
         return parent::install()
@@ -77,6 +86,9 @@ class Ps_Customtext extends Module implements WidgetInterface
             && $this->registerHook('actionShopDataDuplication');
     }
 
+    /**
+     * @return bool
+     */
     public function installFrom16Version()
     {
         require_once _PS_MODULE_DIR_ . $this->name . '/classes/MigrateData.php';
@@ -93,11 +105,17 @@ class Ps_Customtext extends Module implements WidgetInterface
             && $migration->insertData();
     }
 
+    /**
+     * @return bool
+     */
     public function uninstall()
     {
         return parent::uninstall() && $this->uninstallDB();
     }
 
+    /**
+     * @return bool
+     */
     public function installDB()
     {
         $return = true;
@@ -129,6 +147,11 @@ class Ps_Customtext extends Module implements WidgetInterface
         return $return;
     }
 
+    /**
+     * @param bool $drop_table
+     *
+     * @return bool
+     */
     public function uninstallDB($drop_table = true)
     {
         $ret = true;
@@ -141,6 +164,9 @@ class Ps_Customtext extends Module implements WidgetInterface
         return $ret;
     }
 
+    /**
+     * @return string
+     */
     public function getContent()
     {
         $output = '';
@@ -168,6 +194,9 @@ class Ps_Customtext extends Module implements WidgetInterface
         return $output . $this->renderForm();
     }
 
+    /**
+     * @return bool
+     */
     public function processSaveCustomText()
     {
         $shops = Tools::getValue('checkBoxShopAsso_configuration', [$this->context->shop->id]);
@@ -189,6 +218,9 @@ class Ps_Customtext extends Module implements WidgetInterface
         return $saved;
     }
 
+    /**
+     * @return string
+     */
     protected function renderForm()
     {
         $default_lang = (int) Configuration::get('PS_LANG_DEFAULT');
@@ -253,6 +285,9 @@ class Ps_Customtext extends Module implements WidgetInterface
         return $helper->generateForm([['form' => $fields_form]]);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getFormValues()
     {
         $fields_value = [];
@@ -268,6 +303,12 @@ class Ps_Customtext extends Module implements WidgetInterface
         return $fields_value;
     }
 
+    /**
+     * @param string|null $hookName
+     * @param array{cookie: Cookie, cart: Cart} $configuration
+     *
+     * @return string
+     */
     public function renderWidget($hookName = null, array $configuration = [])
     {
         if (!$this->isCached($this->templateFile, $this->getCacheId('ps_customtext'))) {
@@ -277,6 +318,12 @@ class Ps_Customtext extends Module implements WidgetInterface
         return $this->fetch($this->templateFile, $this->getCacheId('ps_customtext'));
     }
 
+    /**
+     * @param string|null $hookName
+     * @param array{cookie: Cookie, cart: Cart} $configuration
+     *
+     * @return array<string, mixed>
+     */
     public function getWidgetVariables($hookName = null, array $configuration = [])
     {
         $customText = new CustomText(1, (int) $this->context->language->id, (int) $this->context->shop->id);
@@ -289,6 +336,9 @@ class Ps_Customtext extends Module implements WidgetInterface
         return ['cms_infos' => $data];
     }
 
+    /**
+     * @return bool
+     */
     public function installFixtures()
     {
         $return = true;
@@ -327,9 +377,9 @@ class Ps_Customtext extends Module implements WidgetInterface
     /**
      * Add CustomText when adding a new Shop
      *
-     * @param array $params
+     * @param array{cookie: Cookie, cart: Cart, altern: int, old_id_shop: int, new_id_shop: int} $params
      */
-    public function hookActionShopDataDuplication($params)
+    public function hookActionShopDataDuplication(array $params)
     {
         if ($infoId = CustomText::getCustomTextIdByShop($params['old_id_shop'])) {
             Shop::setContext(Shop::CONTEXT_SHOP, $params['old_id_shop']);
