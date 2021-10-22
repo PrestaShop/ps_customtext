@@ -2,7 +2,7 @@
 <module>
     <name>ps_customtext</name>
     <displayName><![CDATA[Custom text]]></displayName>
-    <version><![CDATA[4.1.1]]></version>
+    <version><![CDATA[4.2.0]]></version>
     <description><![CDATA[Adds custom information block in your store.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <is_configurable>1</is_configurable>
