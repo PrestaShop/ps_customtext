@@ -9,7 +9,7 @@ parameters:
     - ../../upgrade/
   ignoreErrors:
     - '#If condition is always true.#'
-    - '#Property CustomText::$text \(string\) does not accept array<int|string, string>.#'
+    - '#Property CustomText::\$text \(string\) does not accept array<int\|string, string>.#'
     ## On 1.7.1.0
     - '#Call to method assign\(\) on an unknown class Smarty_Data#'
   reportUnmatchedIgnoredErrors: false

@@ -118,15 +118,14 @@ class Ps_Customtext extends Module implements WidgetInterface
      */
     public function installDB()
     {
-        $return = true;
-        $return &= Db::getInstance()->execute('
+        $return = Db::getInstance()->execute('
                 CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'info` (
                 `id_info` INT UNSIGNED NOT NULL AUTO_INCREMENT,
                 PRIMARY KEY (`id_info`)
             ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8 ;'
         );
 
-        $return &= Db::getInstance()->execute('
+        $return = $return && Db::getInstance()->execute('
                 CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'info_shop` (
                 `id_info` INT(10) UNSIGNED NOT NULL,
                 `id_shop` INT(10) UNSIGNED NOT NULL,
@@ -134,7 +133,7 @@ class Ps_Customtext extends Module implements WidgetInterface
             ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8 ;'
         );
 
-        $return &= Db::getInstance()->execute('
+        $return = $return && Db::getInstance()->execute('
                 CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'info_lang` (
                 `id_info` INT UNSIGNED NOT NULL,
                 `id_shop` INT(10) UNSIGNED NOT NULL,
@@ -154,14 +153,11 @@ class Ps_Customtext extends Module implements WidgetInterface
      */
     public function uninstallDB($drop_table = true)
     {
-        $ret = true;
-        if ($drop_table) {
-            $ret &= Db::getInstance()->execute('DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'info`')
-                && Db::getInstance()->execute('DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'info_shop`')
-                && Db::getInstance()->execute('DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'info_lang`');
+        if (!$drop_table) {
+            return true;
         }
 
-        return $ret;
+        return Db::getInstance()->execute('DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'info`, `' . _DB_PREFIX_ . 'info_shop`, `' . _DB_PREFIX_ . 'info_lang`');
     }
 
     /**
@@ -212,7 +208,7 @@ class Ps_Customtext extends Module implements WidgetInterface
             Shop::setContext(Shop::CONTEXT_SHOP, $shop);
             $info = new CustomText(Tools::getValue('id_info', 1));
             $info->text = $text;
-            $saved &= $info->save();
+            $saved = $saved && $info->save();
         }
 
         return $saved;
@@ -309,7 +305,7 @@ class Ps_Customtext extends Module implements WidgetInterface
      *
      * @return string
      */
-    public function renderWidget($hookName = null, array $configuration = [])
+    public function renderWidget($hookName = null, array $configuration)
     {
         if (!$this->isCached($this->templateFile, $this->getCacheId('ps_customtext'))) {
             $this->smarty->assign($this->getWidgetVariables($hookName, $configuration));
@@ -324,7 +320,7 @@ class Ps_Customtext extends Module implements WidgetInterface
      *
      * @return array<string, mixed>
      */
-    public function getWidgetVariables($hookName = null, array $configuration = [])
+    public function getWidgetVariables($hookName = null, array $configuration)
     {
         $customText = new CustomText(1, (int) $this->context->language->id, (int) $this->context->shop->id);
         $objectPresenter = new ObjectPresenter();
@@ -360,14 +356,14 @@ class Ps_Customtext extends Module implements WidgetInterface
                 $text[$lang['id_lang']] = $tab['text'];
             }
             $info->text = $text;
-            $return &= $info->add();
+            $return = $return && $info->add();
         }
 
         if ($return && count($shopsIds) > 1) {
             foreach ($shopsIds as $idShop) {
                 Shop::setContext(Shop::CONTEXT_SHOP, $idShop);
                 $info->text = $text;
-                $return &= $info->save();
+                $return = $return && $info->save();
             }
         }
 
