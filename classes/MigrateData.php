@@ -30,6 +30,9 @@
  */
 class MigrateData
 {
+    /**
+     * @var array
+     */
     private $loadedData = [];
 
     /**
