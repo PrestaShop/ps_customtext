@@ -27,7 +27,8 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-use PrestaShop\PrestaShop\Adapter\ObjectPresenter;
+use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 
 require_once _PS_MODULE_DIR_ . 'ps_customtext/classes/CustomText.php';
@@ -57,7 +58,7 @@ class Ps_Customtext extends Module implements WidgetInterface
         $this->displayName = $this->trans('Custom text block', [], 'Modules.Customtext.Admin');
         $this->description = $this->trans('Give your visitors extra information, display a customized block of content on your homepage.', [], 'Modules.Customtext.Admin');
 
-        $this->ps_versions_compliancy = ['min' => '1.7.4.0', 'max' => _PS_VERSION_];
+        $this->ps_versions_compliancy = ['min' => '1.7.5.0', 'max' => _PS_VERSION_];
 
         $this->templateFile = 'module:ps_customtext/ps_customtext.tpl';
     }
@@ -68,7 +69,9 @@ class Ps_Customtext extends Module implements WidgetInterface
     public function install()
     {
         // Remove 1.6 equivalent module to avoid DB issues
-        if (Module::isInstalled(self::MODULE_16)) {
+        $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
+        $moduleManager = $moduleManagerBuilder->build();
+        if ($moduleManager->isInstalled(self::MODULE_16)) {
             return $this->installFrom16Version();
         }
 
