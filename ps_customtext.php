@@ -207,7 +207,7 @@ class Ps_Customtext extends Module implements WidgetInterface
             $text[$lang['id_lang']] = (string) Tools::getValue('text_' . $lang['id_lang']);
 
             if (!Configuration::get('PS_ALLOW_HTML_IFRAME') && preg_match('/<iframe.*src=\"(.*)\".*><\/iframe>/isU', $text[$lang['id_lang']])) {
-                $this->context->controller->errors[] = $this->trans('To use <iframe>, enable the feature in Shop Parameters> General', [], 'Admin.Notifications.Error');
+                $this->context->controller->errors[] = $this->trans('To use <iframe>, enable the feature in Shop Parameters > General', [], 'Admin.Notifications.Error');
 
                 return false;
             }
