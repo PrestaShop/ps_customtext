@@ -47,7 +47,7 @@ class Ps_Customtext extends Module implements WidgetInterface
         $this->name = 'ps_customtext';
         $this->tab = 'front_office_features';
         $this->author = 'PrestaShop';
-        $this->version = '4.2.0';
+        $this->version = '4.2.1';
         $this->need_instance = 0;
 
         $this->bootstrap = true;
@@ -205,6 +205,12 @@ class Ps_Customtext extends Module implements WidgetInterface
 
         foreach ($languages as $lang) {
             $text[$lang['id_lang']] = (string) Tools::getValue('text_' . $lang['id_lang']);
+
+            if (!Configuration::get('PS_ALLOW_HTML_IFRAME') && preg_match('/<iframe.*src=\"(.*)\".*><\/iframe>/isU', $text[$lang['id_lang']])) {
+                $this->context->controller->errors[] = $this->trans('To use <iframe>, enable the feature in Shop Parameters > General', [], 'Admin.Notifications.Error');
+
+                return false;
+            }
         }
 
         $saved = true;
@@ -212,7 +218,12 @@ class Ps_Customtext extends Module implements WidgetInterface
             Shop::setContext(Shop::CONTEXT_SHOP, $shop);
             $info = new CustomText(Tools::getValue('id_info', 1));
             $info->text = $text;
-            $saved = $saved && $info->save();
+
+            try {
+                $saved = $saved && $info->save();
+            } catch (PrestaShopException $e) {
+                $saved = false;
+            }
         }
 
         return $saved;
