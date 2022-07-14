@@ -323,13 +323,12 @@ class Ps_Customtext extends Module implements WidgetInterface
     public function renderWidget($hookName = null, array $configuration = [])
     {
         if (!$this->isCached($this->templateFile, $this->getCacheId('ps_customtext'))) {
-            $var_array = $this->getWidgetVariables($hookName, $configuration);
-            if ($var_array === false) {
-
+            $widgetVariables = $this->getWidgetVariables($hookName, $configuration);
+            if ($widgetVariables === false) {
                 return false;
             }
 
-            $this->smarty->assign($var_array);
+            $this->smarty->assign($widgetVariables);
         }
 
         return $this->fetch($this->templateFile, $this->getCacheId('ps_customtext'));
@@ -346,7 +345,6 @@ class Ps_Customtext extends Module implements WidgetInterface
         $id_shop = (int) $this->context->shop->id;
         $id_info = CustomText::getCustomTextIdByShop($id_shop);
         if ($id_info === false) {
-
             return false;
         }
 
