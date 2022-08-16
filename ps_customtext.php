@@ -338,7 +338,7 @@ class Ps_Customtext extends Module implements WidgetInterface
      * @param string|null $hookName
      * @param array $configuration
      *
-     * @return array<string, mixed> | false
+     * @return array<string, mixed>|false
      */
     public function getWidgetVariables($hookName = null, array $configuration = [])
     {
