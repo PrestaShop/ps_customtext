@@ -342,17 +342,17 @@ class Ps_Customtext extends Module implements WidgetInterface
      */
     public function getWidgetVariables($hookName = null, array $configuration = [])
     {
-        $id_shop = (int) $this->context->shop->id;
-        $id_info = CustomText::getCustomTextIdByShop($id_shop);
-        if ($id_info === false) {
+        $idShop = (int) $this->context->shop->id;
+        $idInfo = CustomText::getCustomTextIdByShop($idShop);
+        if ($idInfo === false) {
             return false;
         }
 
-        $customText = new CustomText($id_info, $this->context->language->id, $id_shop);
+        $customText = new CustomText($idInfo, $this->context->language->id, $idShop);
         $objectPresenter = new ObjectPresenter();
         $data = $objectPresenter->present($customText);
         $data['id_lang'] = $this->context->language->id;
-        $data['id_shop'] = $id_shop;
+        $data['id_shop'] = $idShop;
         unset($data['id']);
 
         return ['cms_infos' => $data];
