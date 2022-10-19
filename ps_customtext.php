@@ -318,12 +318,17 @@ class Ps_Customtext extends Module implements WidgetInterface
      * @param string|null $hookName
      * @param array $configuration
      *
-     * @return string
+     * @return string|false
      */
     public function renderWidget($hookName = null, array $configuration = [])
     {
         if (!$this->isCached($this->templateFile, $this->getCacheId('ps_customtext'))) {
-            $this->smarty->assign($this->getWidgetVariables($hookName, $configuration));
+            $widgetVariables = $this->getWidgetVariables($hookName, $configuration);
+            if ($widgetVariables === false) {
+                return false;
+            }
+
+            $this->smarty->assign($widgetVariables);
         }
 
         return $this->fetch($this->templateFile, $this->getCacheId('ps_customtext'));
@@ -333,15 +338,21 @@ class Ps_Customtext extends Module implements WidgetInterface
      * @param string|null $hookName
      * @param array $configuration
      *
-     * @return array<string, mixed>
+     * @return array<string, mixed>|false
      */
     public function getWidgetVariables($hookName = null, array $configuration = [])
     {
-        $customText = new CustomText(1, (int) $this->context->language->id, (int) $this->context->shop->id);
+        $idShop = (int) $this->context->shop->id;
+        $idInfo = CustomText::getCustomTextIdByShop($idShop);
+        if ($idInfo === false) {
+            return false;
+        }
+
+        $customText = new CustomText($idInfo, $this->context->language->id, $idShop);
         $objectPresenter = new ObjectPresenter();
         $data = $objectPresenter->present($customText);
         $data['id_lang'] = $this->context->language->id;
-        $data['id_shop'] = $this->context->shop->id;
+        $data['id_shop'] = $idShop;
         unset($data['id']);
 
         return ['cms_infos' => $data];
