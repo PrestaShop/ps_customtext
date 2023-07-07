@@ -4,6 +4,10 @@
 
 Give your visitors extra information, display a customized block of content on your homepage.
 
+## Compatibility
+
+PrestaShop: `1.7.5.0` or later
+
 ## Reporting issues
 
 You can report issues with this module in the main PrestaShop repository. [Click here to report an issue][report-issue]. 
