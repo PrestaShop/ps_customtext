@@ -12,6 +12,12 @@ PrestaShop: `1.7.5.0` or later
 
 You can report issues with this module in the main PrestaShop repository. [Click here to report an issue][report-issue]. 
 
+## How to test
+
+Link to specs : https://docs.prestashop-project.org/functional-documentation/functional-documentation/ux-ui/back-office/improve/modules/custom-text-block
+
+In BO, you can configure you custom text block. It will reflect on your FO in the homepage.
+
 ## Multistore compatibility
 
 This module is compatible with the multistore :heavy_check_mark: <br/>
