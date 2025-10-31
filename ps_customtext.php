@@ -47,7 +47,7 @@ class Ps_Customtext extends Module implements WidgetInterface
         $this->name = 'ps_customtext';
         $this->tab = 'front_office_features';
         $this->author = 'PrestaShop';
-        $this->version = '4.2.1';
+        $this->version = '4.2.2';
         $this->need_instance = 0;
 
         $this->bootstrap = true;
