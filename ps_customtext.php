@@ -47,7 +47,7 @@ class Ps_Customtext extends Module implements WidgetInterface
         $this->name = 'ps_customtext';
         $this->tab = 'front_office_features';
         $this->author = 'PrestaShop';
-        $this->version = '4.2.1';
+        $this->version = '4.2.2';
         $this->need_instance = 0;
 
         $this->bootstrap = true;
@@ -186,7 +186,7 @@ class Ps_Customtext extends Module implements WidgetInterface
                 $this->_clearCache($this->templateFile);
 
                 if ($update) {
-                    Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules') . '&configure=' . $this->name . '&conf=4');
+                    Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules', true, [], ['configure' => $this->name, 'tab_module' => $this->tab, 'module_name' => $this->name, 'conf' => 4]));
                 }
             }
         }
@@ -284,7 +284,7 @@ class Ps_Customtext extends Module implements WidgetInterface
             ];
         }
 
-        $helper->currentIndex = AdminController::$currentIndex . '&configure=' . $this->name;
+        $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', true, [], ['configure' => $this->name, 'tab_module' => $this->tab, 'module_name' => $this->name]);
         $helper->default_form_language = $default_lang;
         $helper->allow_employee_form_lang = $default_lang;
         $helper->toolbar_scroll = true;
