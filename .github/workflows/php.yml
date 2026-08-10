@@ -50,7 +50,7 @@ jobs:
         run: composer install
 
       - name: Run PHP-CS-Fixer
-        run: ./vendor/bin/php-cs-fixer fix --dry-run --diff --using-cache=no --diff-format udiff
+        run: ./vendor/bin/php-cs-fixer fix --dry-run --diff --using-cache=no
 
   # Run PHPStan against the module (PHP 7.4 – PS 8.2)
   phpstan-74-81:
@@ -128,7 +128,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        presta_version: ['9.1.x', '9.2.x', 'develop']
+        presta_version: ['9.1.4', '9.2.x', 'develop']
         php_version: ['8.1', '8.5']
       fail-fast: false
     env:
