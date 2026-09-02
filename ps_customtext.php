@@ -199,7 +199,8 @@ class Ps_Customtext extends Module implements WidgetInterface
      */
     public function processSaveCustomText()
     {
-        $shops = Tools::getValue('checkBoxShopAsso_configuration', [$this->context->shop->id]);
+        // The checkboxes are named after HelperForm::$table, which renderForm() sets to the CustomText table.
+        $shops = Tools::getValue('checkBoxShopAsso_' . CustomText::$definition['table'], [$this->context->shop->id]);
         $text = [];
         $languages = Language::getLanguages(false);
 
@@ -214,7 +215,8 @@ class Ps_Customtext extends Module implements WidgetInterface
         }
 
         $saved = true;
-        foreach ($shops as $shop) {
+        $shopIds = array_map('intval', array_values($shops));
+        foreach ($shopIds as $shop) {
             Shop::setContext(Shop::CONTEXT_SHOP, $shop);
             $info = new CustomText(Tools::getValue('id_info', 1));
             $info->text = $text;
@@ -226,7 +228,46 @@ class Ps_Customtext extends Module implements WidgetInterface
             }
         }
 
+        if ($saved) {
+            $this->removeUncheckedShops((int) Tools::getValue('id_info', 1), $shopIds);
+        }
+
         return $saved;
+    }
+
+    /**
+     * Drop the shop associations the employee unticked, so the box is a state and not an add-only control.
+     * Shops the employee has no access to are never touched, as in AdminController::updateAssoShop().
+     *
+     * @param int $idInfo
+     * @param int[] $checkedShopIds
+     *
+     * @return void
+     */
+    protected function removeUncheckedShops($idInfo, array $checkedShopIds)
+    {
+        if (!$idInfo || !Shop::isFeatureActive()) {
+            return;
+        }
+
+        // Shop::getShops() reads a cache that Shop::cacheShops() restricts to the employee's own shops when
+        // it is primed after login, so it cannot be trusted to list the shops to spare.
+        // AdminController::updateAssoShop() reads the table directly for the same reason.
+        $keep = $checkedShopIds;
+        foreach (Db::getInstance()->executeS('SELECT `id_shop` FROM `' . _DB_PREFIX_ . 'shop`') as $row) {
+            if (!$this->context->employee->hasAuthOnShop((int) $row['id_shop'])) {
+                $keep[] = (int) $row['id_shop'];
+            }
+        }
+
+        if (empty($keep)) {
+            return;
+        }
+
+        Db::getInstance()->delete(
+            'info_shop',
+            'id_info = ' . $idInfo . ' AND id_shop NOT IN (' . implode(', ', array_map('intval', $keep)) . ')'
+        );
     }
 
     /**
@@ -242,10 +283,6 @@ class Ps_Customtext extends Module implements WidgetInterface
                 'title' => $this->trans('Custom text block', [], 'Modules.Customtext.Admin'),
             ],
             'input' => [
-                'id_info' => [
-                    'type' => 'hidden',
-                    'name' => 'id_info',
-                ],
                 'content' => [
                     'type' => 'textarea',
                     'label' => $this->trans('Text block', [], 'Modules.Customtext.Admin'),
@@ -266,14 +303,20 @@ class Ps_Customtext extends Module implements WidgetInterface
             $fields_form['input'][] = [
                 'type' => 'shop',
                 'label' => $this->trans('Shop association', [], 'Admin.Global'),
-                'name' => 'checkBoxShopAsso_theme',
+                'name' => 'checkBoxShopAsso_' . CustomText::$definition['table'],
             ];
         }
+
+        $fieldsValue = $this->getFormValues();
 
         $helper = new HelperForm();
         $helper->module = $this;
         $helper->name_controller = 'ps_customtext';
-        $helper->identifier = $this->identifier;
+        // Without these three, HelperForm::renderAssoShop() cannot read ps_info_shop and falls back to
+        // ticking the current shop only, whatever the real associations are.
+        $helper->table = CustomText::$definition['table'];
+        $helper->identifier = CustomText::$definition['primary'];
+        $helper->id = (int) $fieldsValue['id_info'];
         $helper->token = Tools::getAdminTokenLite('AdminModules');
         foreach (Language::getLanguages(false) as $lang) {
             $helper->languages[] = [
@@ -291,7 +334,7 @@ class Ps_Customtext extends Module implements WidgetInterface
         $helper->title = $this->displayName;
         $helper->submit_action = 'saveps_customtext';
 
-        $helper->fields_value = $this->getFormValues();
+        $helper->fields_value = $fieldsValue;
 
         return $helper->generateForm([['form' => $fields_form]]);
     }
